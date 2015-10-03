@@ -173,6 +173,8 @@ function! RacerJumpToLocation(filename, linenum, colnum)
             exec 'keepjumps e ' . fnameescape(a:filename)
         endif
         call cursor(a:linenum, a:colnum+1)
+        " Center definition on screen
+        normal! zz
     endif
 endfunction
 
