@@ -167,11 +167,14 @@ endfunction
 
 function! RacerJumpToLocation(filename, linenum, colnum)
     if(a:filename != '')
-        if a:filename != bufname('%')
-            exec 'e ' . fnameescape(a:filename)
-        endif
+        " Record jump mark
         normal! m`
+        if a:filename != bufname('%')
+            exec 'keepjumps e ' . fnameescape(a:filename)
+        endif
         call cursor(a:linenum, a:colnum+1)
+        " Center definition on screen
+        normal! zz
     endif
 endfunction
 
