@@ -94,7 +94,7 @@ candidates = []
 for line in lines:
     completions = line.split(',',5)
     kind = typeMap[completions[4]]
-    completion = {'kind' : kind, 'word' : completions[0]}
+    completion = {'kind' : kind, 'word' : completions[5]}
     if kind == 'f': #function
         completion['abbr'] = completions[5].replace('pub ','').replace('fn ','').rstrip('{')
         if int(vim.eval('g:racer_insert_paren')):
