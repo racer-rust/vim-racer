@@ -78,7 +78,7 @@ function! RacerGetExpCompletions(base)
     let fname = expand("%:p")
     let tmpfname = tempname()
     call writefile(RacerGetBufferContents(a:base), tmpfname)
-    let cmd = g:racer_cmd." complete ".line(".")." ".col." ".fname." ".tmpfname
+    let cmd = g:racer_cmd." complete-with-snippet ".line(".")." ".col." ".fname." ".tmpfname
     if has('python')
     python << EOF
 from subprocess import check_output
@@ -90,18 +90,22 @@ typeMap = { 'Struct' : 's', 'Module' : 'M', 'Function' : 'f',
             'Type' : 't', 'FnArg' : 'v', 'Trait' : 'T'
             }
 lines = [l[6:] for l in check_output(vim.eval('cmd').split()).splitlines() if l.startswith('MATCH')]
+insert_parens = int(vim.eval('g:racer_insert_paren'))
 candidates = []
 for line in lines:
-    completions = line.split(',',5)
-    kind = typeMap[completions[4]]
+    completions = line.split(';',6)
+    kind = typeMap[completions[5]]
     completion = {'kind' : kind, 'word' : completions[0]}
     if kind == 'f': #function
-        completion['abbr'] = completions[5].replace('pub ','').replace('fn ','').rstrip('{')
-        if int(vim.eval('g:racer_insert_paren')):
+        completion['menu'] = completions[6].replace('pub ','').replace('fn ','').rstrip('{')
+        if ' where ' in completion['menu'] or completion['menu'].endswith(' where') :
+            where = completion['menu'].rindex(' where')
+            completion['menu'] = completion['menu'][:where]
+        if insert_parens:
+            completion['abbr'] = completions[0]
             completion['word'] += '('
-        completion['info'] = completions[5]
     elif kind == 's' : #struct
-        completion['abbr'] = completions[5].replace('pub ','').replace('struct ','').rstrip('{')
+        completion['menu'] = completions[6].replace('pub ','').replace('struct ','').rstrip('{')
     candidates.append(completion)
 
 vim.command("return %s" % candidates)
