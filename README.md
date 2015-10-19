@@ -15,12 +15,12 @@ This plugin allows vim to use [Racer](http://github.com/phildawes/racer) for Rus
 
   NeoBundle users:
   ```
-  NeoBundle 'racer-rust/vim-racer', {
-  \   'build' : {
-  \     'mac': 'cargo build --release',
-  \     'unix': 'cargo build --release',
-  \   }
-  \ }
+  NeoBundle 'racer-rust/vim-racer'
+  ```
+  
+  vim-plug users:
+  ```
+  Plug 'racer-rust/vim-racer'
   ```
 
 2. Add g:racer_cmd and $RUST_SRC_PATH variables to your .vimrc. Also it's worth turning on 'hidden' mode for buffers otherwise you need to save the current buffer every time you do a goto-definition. E.g.:
