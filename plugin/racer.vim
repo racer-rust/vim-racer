@@ -79,39 +79,40 @@ function! RacerGetExpCompletions(base)
     let tmpfname = tempname()
     call writefile(RacerGetBufferContents(a:base), tmpfname)
     let cmd = g:racer_cmd." complete ".line(".")." ".col." ".fname." ".tmpfname
-    if has('python')
-    python << EOF
-from subprocess import check_output
-import vim
+    let res = system(cmd)
 
-typeMap = { 'Struct' : 's', 'Module' : 'M', 'Function' : 'f',
-            'Crate' : 'C', 'Let' : 'v', 'StructField' : 'm',
-            'Impl' : 'i', 'Enum' : 'e', 'EnumVariant' : 'E',
-            'Type' : 't', 'FnArg' : 'v', 'Trait' : 'T'
-            }
-lines = [l[6:] for l in check_output(vim.eval('cmd').split()).splitlines() if l.startswith('MATCH')]
-candidates = []
-for line in lines:
-    completions = line.split(',',5)
-    kind = typeMap[completions[4]]
-    completion = {'kind' : kind, 'word' : completions[0], 'dup':1 }
-    if kind == 'f': #function
-        completion['abbr'] = completions[5].replace('pub ','').replace('fn ','').rstrip('{')
-        if int(vim.eval('g:racer_insert_paren')):
-            completion['word'] += '('
-        completion['info'] = completions[5]
-    elif kind == 's' : #struct
-        completion['abbr'] = completions[5].replace('pub ','').replace('struct ','').rstrip('{')
-    candidates.append(completion)
+    let typeMap = {
+        \ 'Struct' : 's', 'Module' : 'M', 'Function' : 'f',
+        \ 'Crate' : 'C', 'Let' : 'v', 'StructField' : 'm',
+        \ 'Impl' : 'i', 'Enum' : 'e', 'EnumVariant' : 'E',
+        \ 'Type' : 't', 'FnArg' : 'v', 'Trait' : 'T'
+        \ }
 
-vim.command("return %s" % candidates)
+    let lines = split(res, "\\n")
+    let out = []
 
-EOF
-    else
-        echoerr("Error, experimental racer completion requires vim compiled
-                    \ with python 2.")
-    endif
+    for line in lines
+        if line =~ "^MATCH"
+            let completions = split(line[6:], ",")
+            let kind = get(typeMap, completions[4])
+            let completion = {'kind' : kind, 'word' : completions[0], 'dup':1 }
+
+            if kind ==# 'f' " function
+                let completion['menu'] = substitute(substitute(substitute(join(completions[5:], ','), '\(pub\|fn\) ',"","g"), '{*$', "", ""), ' where\s\?.*$', "", "")
+                if g:racer_insert_paren == 1
+                    let completion['abbr'] = completions[0]
+                    let completion['word'] .= "("
+                endif
+                let completion['info'] = join(completions[5:], ',')
+            elseif kind ==# 's' " struct
+                let completion['menu'] = substitute(substitute(join(completions[5:], ','), '\(pub\|struct\) ',"","g"), '{*$', "", "")
+            endif
+
+            let out = add(out, completion)
+        endif
+    endfor
     call delete(tmpfname)
+    return out
 endfunction
 
 function! RacerGetCompletions(base)
