@@ -98,13 +98,14 @@ function! RacerGetExpCompletions(base)
             let completion = {'kind' : kind, 'word' : completions[0]}
 
             if kind ==# 'f' " function
-                let completion['abbr'] = substitute(substitute(join(completions[5:], ','), '\(pub\|fn\) ',"","g"), '{*$', "", "")
+                let completion['menu'] = substitute(substitute(substitute(join(completions[5:], ','), '\(pub\|fn\) ',"","g"), '{*$', "", ""), ' where\s\?.*$', "", "")
                 if g:racer_insert_paren == 1
+                    let completion['abbr'] = completions[0]
                     let completion['word'] .= "("
                 endif
                 let completion['info'] = join(completions[5:], ',')
             elseif kind ==# 's' " struct
-                let completion['abbr'] = substitute(substitute(join(completions[5:], ','), '\(pub\|struct\) ',"","g"), '{*$', "", "")
+                let completion['menu'] = substitute(substitute(join(completions[5:], ','), '\(pub\|struct\) ',"","g"), '{*$', "", "")
             endif
 
             let out = add(out, completion)
