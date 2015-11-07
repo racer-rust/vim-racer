@@ -26,7 +26,6 @@
 import re
 import os
 import subprocess
-import tempfile
 from .base import Base
 
 class Source(Base):
@@ -65,20 +64,25 @@ class Source(Base):
         }
 
         candidates = []
-        for line in [l[6:] for l in self.get_results('complete')
+        insert_paren = int(self.vim.eval('g:racer_insert_paren'))
+        for line in [l[6:] for l in self.get_results('complete-with-snippet')
                      if l.startswith('MATCH')]:
-            completions = line.split(',',5)
-            kind = typeMap[completions[4]]
-            completion = { 'kind': kind, 'word': completions[0] }
+            completions = line.split(';', 6)
+            kind = typeMap[completions[5]]
+            completion = { 'kind': kind, 'word': completions[0], 'dup': 1 }
             if kind == 'f': # function
-                completion['abbr'] = completions[5].replace(
-                    'pub ','').replace('fn ','').rstrip('{')
-                if int(self.vim.eval('g:racer_insert_paren')):
+                completion['menu'] = completions[6].replace(
+                    'pub ', '').replace('fn ', '').rstrip('{')
+                if ' where ' in completion['menu'] or completion[
+                        'menu'].endswith(' where') :
+                    where = completion['menu'].rindex(' where')
+                    completion['menu'] = completion['menu'][: where]
+                if insert_paren:
+                    completion['abbr'] = completions[0]
                     completion['word'] += '('
-                completion['info'] = completions[5]
             elif kind == 's' : # struct
-                completion['abbr'] = completions[5].replace(
-                    'pub ','').replace( 'struct ','').rstrip('{')
+                completion['menu'] = completions[6].replace(
+                    'pub ', '').replace( 'struct ', '').rstrip('{')
             candidates.append(completion)
         return candidates
 
@@ -94,7 +98,7 @@ class Source(Base):
                     str(self.vim.funcs.col('.')-1),
                     temp
                 ]).decode(self.encoding).splitlines()
-        except subprocess.CalledProcessError as err:
+        except subprocess.CalledProcessError:
             return []
         finally:
             os.remove(temp)
