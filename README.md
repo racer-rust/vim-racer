@@ -6,7 +6,7 @@ This plugin allows vim to use [Racer](http://github.com/phildawes/racer) for Rus
 
 1. Build / Install [Racer](http://github.com/phildawes/racer)
 
-1. Install using Pathogen, Vundle or NeoBundle. Or, copy plugin/racer.vim into your .vim/plugin directory.
+1. Install using Pathogen, Vundle or NeoBundle. Or, copy `plugin/racer.vim` into your `~/.vim/plugin` directory.
 
   Vundle users:
   ```
@@ -23,7 +23,7 @@ This plugin allows vim to use [Racer](http://github.com/phildawes/racer) for Rus
   Plug 'racer-rust/vim-racer'
   ```
 
-2. Add g:racer_cmd and $RUST_SRC_PATH variables to your .vimrc. Also it's worth turning on 'hidden' mode for buffers otherwise you need to save the current buffer every time you do a goto-definition. E.g.:
+2. Add `g:racer_cmd` and `$RUST_SRC_PATH` variables to your `.vimrc`. Also it's worth turning on 'hidden' mode for buffers otherwise you need to save the current buffer every time you do a goto-definition. E.g.:
 
      ```
      set hidden
@@ -31,6 +31,6 @@ This plugin allows vim to use [Racer](http://github.com/phildawes/racer) for Rus
      let $RUST_SRC_PATH="<path-to-rust-srcdir>/src/"
      ```
 
-3. In insert mode use C-x-C-o to search for completions
+3. In insert mode use `C-x-C-o` to search for completions
 
-4. In normal mode type 'gd' to go to a definition
+4. In normal mode type `gd` to go to a definition
