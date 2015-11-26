@@ -62,11 +62,9 @@ endif
 function! RacerGetPrefixCol(base)
     let col = col(".")-1
     let b:racer_col = col
-    let scratch = expand("%") == ""
-    let fname = expand("%:p")
-    let tmpfname = tempname()
-    call writefile(RacerGetBufferContents(a:base), tmpfname)
-    let cmd = g:racer_cmd." prefix ".line(".")." ".col." ".fname." ".tmpfname
+    let b:tmpfname = tempname()
+    call writefile(RacerGetBufferContents(a:base), b:tmpfname)
+    let cmd = g:racer_cmd." prefix ".line(".")." ".col." ".b:tmpfname
     let res = system(cmd)
     let prefixline = split(res, "\\n")[0]
     let startcol = split(prefixline[7:], ",")[0]
@@ -76,9 +74,7 @@ endfunction
 function! RacerGetExpCompletions(base)
     let col = b:racer_col      " use the column from the previous RacerGetPrefixCol() call, since vim ammends it afterwards
     let fname = expand("%:p")
-    let tmpfname = tempname()
-    call writefile(RacerGetBufferContents(a:base), tmpfname)
-    let cmd = g:racer_cmd." complete ".line(".")." ".col." ".fname." ".tmpfname
+    let cmd = g:racer_cmd." complete ".line(".")." ".col." ".fname." ".b:tmpfname
     let res = system(cmd)
 
     let typeMap = {
@@ -111,16 +107,14 @@ function! RacerGetExpCompletions(base)
             let out = add(out, completion)
         endif
     endfor
-    call delete(tmpfname)
+    call delete(b:tmpfname)
     return out
 endfunction
 
 function! RacerGetCompletions(base)
     let col = b:racer_col      " use the column from the previous RacerGetPrefixCol() call, since vim ammends it afterwards
     let fname = expand("%:p")
-    let tmpfname = tempname()
-    call writefile(RacerGetBufferContents(a:base), tmpfname)
-    let cmd = g:racer_cmd." complete ".line(".")." ".col." ".fname." ".tmpfname
+    let cmd = g:racer_cmd." complete ".line(".")." ".col." ".fname." ".b:tmpfname
     let res = system(cmd)
     let lines = split(res, "\\n")
     let out = []
@@ -130,7 +124,7 @@ function! RacerGetCompletions(base)
            let out = add(out, completion)
        endif
     endfor
-    call delete(tmpfname)
+    call delete(b:tmpfname)
     return out
 endfunction
 
