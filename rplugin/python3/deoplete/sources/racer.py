@@ -49,7 +49,7 @@ class Source(Base):
                 r'(\.|::)\w*$', context['input']):
             return -1
 
-        results = self.get_results('prefix')
+        results = self.get_results('prefix', self.vim.funcs.col('.'))
         if not results:
             return -1
         prefixline = results[0]
@@ -65,7 +65,9 @@ class Source(Base):
 
         candidates = []
         insert_paren = int(self.vim.eval('g:racer_insert_paren'))
-        for line in [l[6:] for l in self.get_results('complete-with-snippet')
+        for line in [l[6:] for l
+                     in self.get_results('complete-with-snippet',
+                                         context['complete_position'] + 1)
                      if l.startswith('MATCH')]:
             completions = line.split(';', 6)
             kind = typeMap[completions[5]]
@@ -86,7 +88,7 @@ class Source(Base):
             candidates.append(completion)
         return candidates
 
-    def get_results(self, command):
+    def get_results(self, command, col):
         temp = self.vim.funcs.tempname()
         with open(temp, 'w') as f:
             for l in self.vim.current.buffer:
@@ -95,7 +97,7 @@ class Source(Base):
             results = subprocess.check_output([
                     self.racer, command,
                     str(self.vim.funcs.line('.')),
-                    str(self.vim.funcs.col('.')-1),
+                    str(col - 1),
                     temp
                 ]).decode(self.encoding).splitlines()
         except subprocess.CalledProcessError:
