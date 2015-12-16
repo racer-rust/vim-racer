@@ -35,18 +35,16 @@ class Source(Base):
         self.name = 'racer'
         self.mark = '[racer]'
         self.filetypes = ['rust']
-        self.min_pattern_length = 0
-        self.executable_racer = self.vim.funcs.executable(
+        self.input_pattern = r'(\.|::)\w*'
+        self.rank = 500
+
+        self.__executable_racer = self.vim.funcs.executable(
             self.vim.eval('g:racer_cmd'))
-        self.racer = self.vim.eval('g:racer_cmd')
-        self.encoding = self.vim.eval('&encoding')
+        self.__racer = self.vim.eval('g:racer_cmd')
+        self.__encoding = self.vim.eval('&encoding')
 
     def get_complete_position(self, context):
-        if not self.executable_racer:
-            return -1
-
-        if context['event'] != 'Manual' and not re.search(
-                r'(\.|::)\w*$', context['input']):
+        if not self.__executable_racer:
             return -1
 
         results = self.get_results('prefix', self.vim.funcs.col('.'))
@@ -60,7 +58,8 @@ class Source(Base):
             'Struct': 's', 'Module': 'M', 'Function': 'f',
             'Crate': 'C',  'Let': 'v',    'StructField': 'm',
             'Impl': 'i',   'Enum': 'e',   'EnumVariant': 'E',
-            'Type': 't',   'FnArg': 'v',  'Trait': 'T'
+            'Type': 't',   'FnArg': 'v',  'Trait': 'T',
+            'Const': 'c'
         }
 
         candidates = []
@@ -70,7 +69,7 @@ class Source(Base):
                                          context['complete_position'] + 1)
                      if l.startswith('MATCH')]:
             completions = line.split(';', 6)
-            kind = typeMap[completions[5]]
+            kind = typeMap.get(completions[5], '')
             completion = { 'kind': kind, 'word': completions[0], 'dup': 1 }
             if kind == 'f': # function
                 completion['menu'] = completions[6].replace(
@@ -89,19 +88,15 @@ class Source(Base):
         return candidates
 
     def get_results(self, command, col):
-        temp = self.vim.funcs.tempname()
-        with open(temp, 'w') as f:
-            for l in self.vim.current.buffer:
-                f.write(l + "\n")
-        try:
-            results = subprocess.check_output([
+        with tempfile.NamedTemporaryFile(mode='w', dir=self.vim.funcs.getcwd()) as tf:
+            tf.write("\n".join(self.vim.current.buffer))
+            try:
+                results = subprocess.check_output([
                     self.racer, command,
                     str(self.vim.funcs.line('.')),
                     str(col - 1),
-                    temp
-                ]).decode(self.encoding).splitlines()
-        except subprocess.CalledProcessError:
-            return []
-        finally:
-            os.remove(temp)
-        return results
+                    tf.name
+                    ]).decode(self.encoding).splitlines()
+            except subprocess.CalledProcessError:
+                return []
+            return results
