@@ -35,18 +35,14 @@ class Source(Base):
         self.name = 'racer'
         self.mark = '[racer]'
         self.filetypes = ['rust']
-        self.min_pattern_length = 0
-        self.executable_racer = self.vim.funcs.executable(
+        self.input_pattern = r'(\.|::)\w*'
+        self.__executable_racer = self.vim.funcs.executable(
             self.vim.eval('g:racer_cmd'))
-        self.racer = self.vim.eval('g:racer_cmd')
-        self.encoding = self.vim.eval('&encoding')
+        self.__racer = self.vim.eval('g:racer_cmd')
+        self.__encoding = self.vim.eval('&encoding')
 
     def get_complete_position(self, context):
-        if not self.executable_racer:
-            return -1
-
-        if context['event'] != 'Manual' and not re.search(
-                r'(\.|::)\w*$', context['input']):
+        if not self.__executable_racer:
             return -1
 
         results = self.get_results('prefix', self.vim.funcs.col('.'))
@@ -95,11 +91,11 @@ class Source(Base):
                 f.write(l + "\n")
         try:
             results = subprocess.check_output([
-                    self.racer, command,
+                    self.__racer, command,
                     str(self.vim.funcs.line('.')),
                     str(col - 1),
                     temp
-                ]).decode(self.encoding).splitlines()
+                ]).decode(self.__encoding).splitlines()
         except subprocess.CalledProcessError:
             return []
         finally:
