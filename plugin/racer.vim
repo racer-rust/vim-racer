@@ -25,10 +25,6 @@ if !exists('g:racer_cmd')
         let $PATH .= s:pathsep . path
     endif
     let g:racer_cmd = 'racer'
-
-    if !(executable(g:racer_cmd))
-      echohl WarningMsg | echomsg "No racer executable found in $PATH (" . $PATH . ")"
-    endif
 endif
 
 if !exists('$RUST_SRC_PATH')
@@ -41,13 +37,6 @@ if !exists('$RUST_SRC_PATH')
     endif
     if isdirectory("C:\\rust\\src")
         let $RUST_SRC_PATH="C:\\rust\\src"
-    endif
-endif
-if !isdirectory($RUST_SRC_PATH)
-    if exists('s:rust_src_default')
-      echohl WarningMsg | echomsg "No RUST_SRC_PATH environment variable present, nor could default installation be found at: " . $RUST_SRC_PATH
-    else
-      echohl WarningMsg | echomsg "No directory was found at provided RUST_SRC_PATH: " . $RUST_SRC_PATH
     endif
 endif
 
@@ -131,6 +120,10 @@ function! RacerGetCompletions(base)
 endfunction
 
 function! RacerGoToDefinition()
+    if s:ErrorCheck()
+        return
+    endif
+
     let col = col(".")-1
     let b:racer_col = col
     let fname = expand("%:p")
@@ -177,6 +170,10 @@ endfunction
 
 function! RacerComplete(findstart, base)
     if a:findstart
+        if s:ErrorCheck()
+            return -1
+        endif
+
         return RacerGetPrefixCol(a:base)
     else
         if g:racer_experimental_completer == 1
@@ -184,6 +181,22 @@ function! RacerComplete(findstart, base)
         else
             return RacerGetCompletions(a:base)
         endif
+    endif
+endfunction
+
+function! s:ErrorCheck()
+    if !executable(g:racer_cmd)
+        echohl WarningMsg | echomsg "No racer executable found in $PATH (" . $PATH . ")"
+        return 1
+    endif
+
+    if !isdirectory($RUST_SRC_PATH)
+        if exists('s:rust_src_default')
+            echohl WarningMsg | echomsg "No RUST_SRC_PATH environment variable present, nor could default installation be found at: " . $RUST_SRC_PATH
+        else
+            echohl WarningMsg | echomsg "No directory was found at provided RUST_SRC_PATH: " . $RUST_SRC_PATH
+        endif
+        return 2
     endif
 endfunction
 
