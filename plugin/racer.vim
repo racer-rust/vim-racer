@@ -62,7 +62,7 @@ endfunction
 
 function! s:RacerGetExpCompletions(base)
     let col = strlen(getline('.')) + strlen(a:base)     " use the column from the previous RacerGetPrefixCol() call, since vim ammends it afterwards
-    call writefile(RacerGetBufferContents(a:base), b:tmpfname)
+    call writefile(s:RacerGetBufferContents(a:base), b:tmpfname)
     let fname = expand("%:p")
     let cmd = g:racer_cmd." complete ".line(".")." ".col." \"".fname."\" \"".b:tmpfname."\""
     let res = system(cmd)
@@ -103,7 +103,7 @@ endfunction
 
 function! s:RacerGetCompletions(base)
     let col = strlen(getline('.')) + strlen(a:base)     " use the column from the previous RacerGetPrefixCol() call, since vim ammends it afterwards
-    call writefile(RacerGetBufferContents(a:base), b:tmpfname)
+    call writefile(s:RacerGetBufferContents(a:base), b:tmpfname)
     let fname = expand("%:p")
     let cmd = g:racer_cmd." complete ".line(".")." ".col." \"".fname."\" \"".b:tmpfname."\""
     let res = system(cmd)
