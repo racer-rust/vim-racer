@@ -36,6 +36,8 @@ class Source(Base):
         self.mark = '[racer]'
         self.filetypes = ['rust']
         self.input_pattern = r'(\.|::)\w*'
+        self.rank = 500
+
         self.__executable_racer = self.vim.funcs.executable(
             self.vim.eval('g:racer_cmd'))
         self.__racer = self.vim.eval('g:racer_cmd')
@@ -56,7 +58,8 @@ class Source(Base):
             'Struct': 's', 'Module': 'M', 'Function': 'f',
             'Crate': 'C',  'Let': 'v',    'StructField': 'm',
             'Impl': 'i',   'Enum': 'e',   'EnumVariant': 'E',
-            'Type': 't',   'FnArg': 'v',  'Trait': 'T'
+            'Type': 't',   'FnArg': 'v',  'Trait': 'T',
+            'Const': 'c'
         }
 
         candidates = []
@@ -66,7 +69,7 @@ class Source(Base):
                                          context['complete_position'] + 1)
                      if l.startswith('MATCH')]:
             completions = line.split(';', 6)
-            kind = typeMap[completions[5]]
+            kind = typeMap.get(completions[5], '')
             completion = { 'kind': kind, 'word': completions[0], 'dup': 1 }
             if kind == 'f': # function
                 completion['menu'] = completions[6].replace(
