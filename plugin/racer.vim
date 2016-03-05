@@ -201,8 +201,10 @@ function! s:ErrorCheck()
 endfunction
 
 autocmd FileType rust setlocal omnifunc=RacerComplete
-autocmd FileType rust nnoremap <buffer>gd :call RacerGoToDefinition()<cr>
-autocmd FileType rust nnoremap <buffer>gD :vsplit<cr>:call RacerGoToDefinition()<cr>
+autocmd FileType rust nnoremap <buffer> gd
+            \ :call RacerGoToDefinition()<cr>
+autocmd FileType rust nnoremap <buffer> gD
+            \ :vsplit<cr>:call RacerGoToDefinition()<cr>
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
