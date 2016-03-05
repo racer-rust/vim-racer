@@ -60,14 +60,9 @@ function! s:RacerGetPrefixCol(base)
     return startcol
 endfunction
 
-<<<<<<< a6ce9a509937f6f9f123728a34e51fc29df75c05
-function! RacerGetExpCompletions(base)
+function! s:RacerGetExpCompletions(base)
     let col = strlen(getline('.')) + strlen(a:base)     " use the column from the previous RacerGetPrefixCol() call, since vim ammends it afterwards
     call writefile(RacerGetBufferContents(a:base), b:tmpfname)
-=======
-function! s:RacerGetExpCompletions(base)
-    let col = b:racer_col      " use the column from the previous s:RacerGetPrefixCol() call, since vim ammends it afterwards
->>>>>>> Fix functions scope
     let fname = expand("%:p")
     let cmd = g:racer_cmd." complete ".line(".")." ".col." \"".fname."\" \"".b:tmpfname."\""
     let res = system(cmd)
@@ -106,14 +101,9 @@ function! s:RacerGetExpCompletions(base)
     return out
 endfunction
 
-<<<<<<< a6ce9a509937f6f9f123728a34e51fc29df75c05
-function! RacerGetCompletions(base)
+function! s:RacerGetCompletions(base)
     let col = strlen(getline('.')) + strlen(a:base)     " use the column from the previous RacerGetPrefixCol() call, since vim ammends it afterwards
     call writefile(RacerGetBufferContents(a:base), b:tmpfname)
-=======
-function! s:RacerGetCompletions(base)
-    let col = b:racer_col      " use the column from the previous s:RacerGetPrefixCol() call, since vim ammends it afterwards
->>>>>>> Fix functions scope
     let fname = expand("%:p")
     let cmd = g:racer_cmd." complete ".line(".")." ".col." \"".fname."\" \"".b:tmpfname."\""
     let res = system(cmd)
@@ -211,9 +201,9 @@ function! s:ErrorCheck()
 endfunction
 
 autocmd FileType rust setlocal omnifunc=RacerComplete
-autocmd FileType rust nnoremap <buffer> gd
+autocmd FileType rust nnoremap <buffer><silent> gd
             \ :call <SID>RacerGoToDefinition()<cr>
-autocmd FileType rust nnoremap <buffer> gD
+autocmd FileType rust nnoremap <buffer><silent> gD
             \ :vsplit<cr>:call <SID>RacerGoToDefinition()<cr>
 
 let &cpo = s:save_cpo
