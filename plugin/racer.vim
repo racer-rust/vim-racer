@@ -48,11 +48,11 @@ if !exists('g:racer_insert_paren')
     let g:racer_insert_paren = 1
 endif
 
-function! RacerGetPrefixCol(base)
+function! s:RacerGetPrefixCol(base)
     let col = col(".")-1
     let b:racer_col = col
     let b:tmpfname = tempname()
-    call writefile(RacerGetBufferContents(a:base), b:tmpfname)
+    call writefile(s:RacerGetBufferContents(a:base), b:tmpfname)
     let cmd = g:racer_cmd." prefix ".line(".")." ".col." ".b:tmpfname
     let res = system(cmd)
     let prefixline = split(res, "\\n")[0]
@@ -60,9 +60,14 @@ function! RacerGetPrefixCol(base)
     return startcol
 endfunction
 
+<<<<<<< a6ce9a509937f6f9f123728a34e51fc29df75c05
 function! RacerGetExpCompletions(base)
     let col = strlen(getline('.')) + strlen(a:base)     " use the column from the previous RacerGetPrefixCol() call, since vim ammends it afterwards
     call writefile(RacerGetBufferContents(a:base), b:tmpfname)
+=======
+function! s:RacerGetExpCompletions(base)
+    let col = b:racer_col      " use the column from the previous s:RacerGetPrefixCol() call, since vim ammends it afterwards
+>>>>>>> Fix functions scope
     let fname = expand("%:p")
     let cmd = g:racer_cmd." complete ".line(".")." ".col." \"".fname."\" \"".b:tmpfname."\""
     let res = system(cmd)
@@ -101,9 +106,14 @@ function! RacerGetExpCompletions(base)
     return out
 endfunction
 
+<<<<<<< a6ce9a509937f6f9f123728a34e51fc29df75c05
 function! RacerGetCompletions(base)
     let col = strlen(getline('.')) + strlen(a:base)     " use the column from the previous RacerGetPrefixCol() call, since vim ammends it afterwards
     call writefile(RacerGetBufferContents(a:base), b:tmpfname)
+=======
+function! s:RacerGetCompletions(base)
+    let col = b:racer_col      " use the column from the previous s:RacerGetPrefixCol() call, since vim ammends it afterwards
+>>>>>>> Fix functions scope
     let fname = expand("%:p")
     let cmd = g:racer_cmd." complete ".line(".")." ".col." \"".fname."\" \"".b:tmpfname."\""
     let res = system(cmd)
@@ -119,7 +129,7 @@ function! RacerGetCompletions(base)
     return out
 endfunction
 
-function! RacerGoToDefinition()
+function! s:RacerGoToDefinition()
     if s:ErrorCheck()
         return
     endif
@@ -137,14 +147,14 @@ function! RacerGoToDefinition()
              let linenum = split(line[6:], ",")[1]
              let colnum = split(line[6:], ",")[2]
              let fname = split(line[6:], ",")[3]
-             call RacerJumpToLocation(fname, linenum, colnum)
+             call s:RacerJumpToLocation(fname, linenum, colnum)
              break
         endif
     endfor
     call delete(tmpfname)
 endfunction
 
-function! RacerGetBufferContents(base)
+function! s:RacerGetBufferContents(base)
     " Re-combine the completion base word from omnicomplete with the current
     " line contents. Since the base word gets remove from the buffer before
     " this function is invoked we have to put it back in to out tmpfile.
@@ -155,7 +165,7 @@ function! RacerGetBufferContents(base)
     return buf_lines
 endfunction
 
-function! RacerJumpToLocation(filename, linenum, colnum)
+function! s:RacerJumpToLocation(filename, linenum, colnum)
     if(a:filename != '')
         " Record jump mark
         normal! m`
@@ -174,27 +184,27 @@ function! RacerComplete(findstart, base)
             return -1
         endif
 
-        return RacerGetPrefixCol(a:base)
+        return s:RacerGetPrefixCol(a:base)
     else
         if g:racer_experimental_completer == 1
-            return RacerGetExpCompletions(a:base)
+            return s:RacerGetExpCompletions(a:base)
         else
-            return RacerGetCompletions(a:base)
+            return s:RacerGetCompletions(a:base)
         endif
     endif
 endfunction
 
 function! s:ErrorCheck()
     if !executable(g:racer_cmd)
-        echohl WarningMsg | echomsg "No racer executable found in $PATH (" . $PATH . ")"
+        echohl WarningMsg | echomsg "No racer executable found in $PATH (" . $PATH . ")" | echohl NONE
         return 1
     endif
 
     if !isdirectory($RUST_SRC_PATH)
         if exists('s:rust_src_default')
-            echohl WarningMsg | echomsg "No RUST_SRC_PATH environment variable present, nor could default installation be found at: " . $RUST_SRC_PATH
+            echohl WarningMsg | echomsg "No RUST_SRC_PATH environment variable present, nor could default installation be found at: " . $RUST_SRC_PATH | echohl NONE
         else
-            echohl WarningMsg | echomsg "No directory was found at provided RUST_SRC_PATH: " . $RUST_SRC_PATH
+            echohl WarningMsg | echomsg "No directory was found at provided RUST_SRC_PATH: " . $RUST_SRC_PATH | echohl NONE
         endif
         return 2
     endif
@@ -202,9 +212,9 @@ endfunction
 
 autocmd FileType rust setlocal omnifunc=RacerComplete
 autocmd FileType rust nnoremap <buffer> gd
-            \ :call RacerGoToDefinition()<cr>
+            \ :call <SID>RacerGoToDefinition()<cr>
 autocmd FileType rust nnoremap <buffer> gD
-            \ :vsplit<cr>:call RacerGoToDefinition()<cr>
+            \ :vsplit<cr>:call <SID>RacerGoToDefinition()<cr>
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
