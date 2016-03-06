@@ -7,7 +7,7 @@
 "    - in normal mode do 'gd' to go to definition
 "    - 'gD' goes to the definition in a new vertical split
 "
-" (This plugin is best used with the 'hidden' option enabled so that switching buffers doesn't force you to save) 
+" (This plugin is best used with the 'hidden' option enabled so that switching buffers doesn't force you to save)
 
 if exists('g:loaded_racer')
   finish
@@ -169,10 +169,11 @@ function! s:RacerJumpToLocation(filename, linenum, colnum)
 endfunction
 
 function! RacerComplete(findstart, base)
+    if s:ErrorCheck()
+        return -1
+    endif
+
     if a:findstart
-        if s:ErrorCheck()
-            return -1
-        endif
 
         return s:RacerGetPrefixCol(a:base)
     else
