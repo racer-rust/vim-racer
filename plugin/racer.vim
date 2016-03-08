@@ -7,7 +7,7 @@
 "    - in normal mode do 'gd' to go to definition
 "    - 'gD' goes to the definition in a new vertical split
 "
-" (This plugin is best used with the 'hidden' option enabled so that switching buffers doesn't force you to save) 
+" (This plugin is best used with the 'hidden' option enabled so that switching buffers doesn't force you to save)
 
 if exists('g:loaded_racer')
   finish
@@ -176,6 +176,10 @@ function! RacerComplete(findstart, base)
 
         return s:RacerGetPrefixCol(a:base)
     else
+        if s:ErrorCheck()
+            return []
+        endif
+
         if g:racer_experimental_completer == 1
             return s:RacerGetExpCompletions(a:base)
         else
