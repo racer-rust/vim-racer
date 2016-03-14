@@ -133,7 +133,9 @@ function! s:RacerGoToDefinition()
     let res = system(cmd)
     let lines = split(res, "\\n")
     for line in lines
-        if line =~ "^MATCH"
+        if res =~# " error: " && line !=# "END"
+            call s:Warn(line)
+        elseif line =~ "^MATCH"
              let linenum = split(line[6:], ",")[1]
              let colnum = split(line[6:], ",")[2]
              let fname = split(line[6:], ",")[3]
@@ -188,17 +190,21 @@ function! RacerComplete(findstart, base)
     endif
 endfunction
 
+function! s:Warn(msg)
+    echohl WarningMsg | echomsg a:msg | echohl NONE
+endfunction
+
 function! s:ErrorCheck()
     if !executable(g:racer_cmd)
-        echohl WarningMsg | echomsg "No racer executable found in $PATH (" . $PATH . ")" | echohl NONE
+        call s:Warn("No racer executable found in $PATH (" . $PATH . ")")
         return 1
     endif
 
     if !isdirectory($RUST_SRC_PATH)
         if exists('s:rust_src_default')
-            echohl WarningMsg | echomsg "No RUST_SRC_PATH environment variable present, nor could default installation be found at: " . $RUST_SRC_PATH | echohl NONE
+            call s:Warn("No RUST_SRC_PATH environment variable present, nor could default installation be found at: " . $RUST_SRC_PATH)
         else
-            echohl WarningMsg | echomsg "No directory was found at provided RUST_SRC_PATH: " . $RUST_SRC_PATH | echohl NONE
+            call s:Warn("No directory was found at provided RUST_SRC_PATH: " . $RUST_SRC_PATH)
         endif
         return 2
     endif
