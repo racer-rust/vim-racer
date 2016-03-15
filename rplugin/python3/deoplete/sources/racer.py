@@ -92,11 +92,11 @@ class Source(Base):
             tf.write("\n".join(self.vim.current.buffer))
             try:
                 results = subprocess.check_output([
-                    self.racer, command,
+                    self.__racer, command,
                     str(self.vim.funcs.line('.')),
                     str(col - 1),
                     tf.name
-                    ]).decode(self.encoding).splitlines()
+                    ]).decode(self.__encoding).splitlines()
             except subprocess.CalledProcessError:
                 return []
             return results
