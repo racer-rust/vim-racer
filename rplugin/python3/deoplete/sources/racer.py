@@ -88,19 +88,15 @@ class Source(Base):
         return candidates
 
     def get_results(self, command, col):
-        temp = self.vim.funcs.tempname()
-        with open(temp, 'w') as f:
-            for l in self.vim.current.buffer:
-                f.write(l + "\n")
-        try:
-            results = subprocess.check_output([
+        with tempfile.NamedTemporaryFile(mode='w', dir=self.vim.funcs.getcwd()) as tf:
+            tf.write("\n".join(self.vim.current.buffer))
+            try:
+                results = subprocess.check_output([
                     self.__racer, command,
                     str(self.vim.funcs.line('.')),
                     str(col - 1),
-                    temp
-                ]).decode(self.__encoding).splitlines()
-        except subprocess.CalledProcessError:
-            return []
-        finally:
-            os.remove(temp)
-        return results
+                    tf.name
+                    ]).decode(self.__encoding).splitlines()
+            except subprocess.CalledProcessError:
+                return []
+            return results
