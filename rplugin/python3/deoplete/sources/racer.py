@@ -26,6 +26,7 @@
 import re
 import os
 import subprocess
+import tempfile
 from .base import Base
 
 class Source(Base):
@@ -65,14 +66,14 @@ class Source(Base):
         candidates = []
         insert_paren = int(self.vim.eval('g:racer_insert_paren'))
         for line in [l[6:] for l
-                     in self.get_results('complete-with-snippet',
+                     in self.get_results('complete',
                                          context['complete_position'] + 1)
                      if l.startswith('MATCH')]:
-            completions = line.split(';', 6)
-            kind = typeMap.get(completions[5], '')
+            completions = line.split(',', 5)
+            kind = typeMap.get(completions[4], '')
             completion = { 'kind': kind, 'word': completions[0], 'dup': 1 }
             if kind == 'f': # function
-                completion['menu'] = completions[6].replace(
+                completion['menu'] = completions[5].replace(
                     'pub ', '').replace('fn ', '').rstrip('{')
                 if ' where ' in completion['menu'] or completion[
                         'menu'].endswith(' where') :
@@ -82,21 +83,31 @@ class Source(Base):
                     completion['abbr'] = completions[0]
                     completion['word'] += '('
             elif kind == 's' : # struct
-                completion['menu'] = completions[6].replace(
+                completion['menu'] = completions[5].replace(
                     'pub ', '').replace( 'struct ', '').rstrip('{')
             candidates.append(completion)
         return candidates
 
     def get_results(self, command, col):
-        with tempfile.NamedTemporaryFile(mode='w', dir=self.vim.funcs.getcwd()) as tf:
+        with tempfile.NamedTemporaryFile(mode='w') as tf:
             tf.write("\n".join(self.vim.current.buffer))
+            tf.flush()
+
+            args = [
+                self.__racer, command,
+                str(self.vim.funcs.line('.')),
+                str(col - 1),
+                tf.name
+            ] if command == 'prefix' else [
+                self.__racer, command,
+                str(self.vim.funcs.line('.')),
+                str(col - 1),
+                tf.name,
+                self.vim.current.buffer.name
+            ]
             try:
-                results = subprocess.check_output([
-                    self.__racer, command,
-                    str(self.vim.funcs.line('.')),
-                    str(col - 1),
-                    tf.name
-                    ]).decode(self.__encoding).splitlines()
+                results = subprocess.check_output(args).decode(
+                    self.__encoding).splitlines()
             except subprocess.CalledProcessError:
                 return []
             return results
