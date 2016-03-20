@@ -69,11 +69,11 @@ class Source(Base):
                      in self.get_results('complete',
                                          context['complete_position'] + 1)
                      if l.startswith('MATCH')]:
-            completions = line.split(',', 5)
+            completions = line.split(',')
             kind = typeMap.get(completions[4], '')
             completion = { 'kind': kind, 'word': completions[0], 'dup': 1 }
             if kind == 'f': # function
-                completion['menu'] = completions[5].replace(
+                completion['menu'] = ','.join(completions[5:]).replace(
                     'pub ', '').replace('fn ', '').rstrip('{')
                 if ' where ' in completion['menu'] or completion[
                         'menu'].endswith(' where') :
@@ -83,7 +83,7 @@ class Source(Base):
                     completion['abbr'] = completions[0]
                     completion['word'] += '('
             elif kind == 's' : # struct
-                completion['menu'] = completions[5].replace(
+                completion['menu'] = ','.join(completions[5:]).replace(
                     'pub ', '').replace( 'struct ', '').rstrip('{')
             candidates.append(completion)
         return candidates
