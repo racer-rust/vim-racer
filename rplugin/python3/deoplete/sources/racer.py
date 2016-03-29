@@ -102,8 +102,8 @@ class Source(Base):
                 self.__racer, command,
                 str(self.vim.funcs.line('.')),
                 str(col - 1),
-                tf.name,
-                self.vim.current.buffer.name
+                self.vim.current.buffer.name,
+                tf.name
             ]
             try:
                 results = subprocess.check_output(args).decode(
