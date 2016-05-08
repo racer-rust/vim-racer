@@ -102,13 +102,12 @@ function! s:RacerGetExpCompletions(base)
 endfunction
 
 function! s:RacerSplitLine(line)
-    let b:parts = []
     let separator = ';'
     let placeholder = '{PLACEHOLDER}'
     let line = substitute(a:line, '\\;', placeholder, 'g')
     let b:parts = split(line, separator)
-    let docs = substitute(substitute(substitute(substitute(b:parts[7], '^\"\(.*\)\"$', '\1', ''), '\\\"', '\"', 'g'), '\\''', '''', 'g'), '\\n', '\n', 'g')
-    let b:parts[7] = docs
+    let docs = substitute(substitute(substitute(substitute(get(b:parts, 7, ''), '^\"\(.*\)\"$', '\1', ''), '\\\"', '\"', 'g'), '\\''', '''', 'g'), '\\n', '\n', 'g')
+    let b:parts = add(b:parts[:6], docs)
     let b:parts = map(copy(b:parts), 'substitute(v:val, ''{PLACEHOLDER}'', '';'', ''g'')')
 
     return b:parts
@@ -116,20 +115,21 @@ endfunction
 
 function! s:RacerShowDocumentation()
     let l:winview = winsaveview()  " Save the current cursor position
-    " Move to the end of the word for the entire token to search
-    execute "normal e"
+    " Move to the end of the word for the entire token to search.
+    " Move one char back to avoid moving to the end of the *next* word.
+    execute "normal he"
     let col = col('.')
     let b:tmpfname = tempname()
     call writefile(getline(1, '$'), b:tmpfname)  " Create temporary file with the buffer's current state
     let fname = expand("%:p")
     let cmd = g:racer_cmd." complete-with-snippet ".line(".")." ".col." ".fname." ".b:tmpfname
     let res = system(cmd)
+    call winrestview(l:winview)  " Restore de cursor position
+    call delete(b:tmpfname)  " Delete the temporary file
     let lines = split(res, "\\n")
-    let out = []
     for line in lines
        if line =~ "^MATCH"
-           let completion = s:RacerSplitLine(line[6:])[7]
-           let docs = add(out, completion)
+           let docs = s:RacerSplitLine(line[6:])[7]
            if len(docs) > 0  " Only open doc buffer if there're docs to show
                let bn = bufnr("__doc__")
                if bn > 0
@@ -152,13 +152,11 @@ function! s:RacerShowDocumentation()
                silent normal! 1Gdd
                setlocal nomodifiable
                setlocal nomodified
-               setlocal filetype=markdown
+               setlocal filetype=rustdoc
            endif
            break
        endif
     endfor
-    call winrestview(l:winview)  " Restore de cursor position
-    call delete(b:tmpfname)  " Delete the temporary file
 endfunction
 
 function! s:RacerGetCompletions(base)
@@ -171,8 +169,7 @@ function! s:RacerGetCompletions(base)
     let out = []
     for line in lines
        if line =~ "^MATCH"
-           let spl = s:RacerSplitLine(line[6:])
-           let completion = spl[0]
+           let completion = split(line[6:], ",")[0]
            let out = add(out, completion)
        endif
     endfor
@@ -198,11 +195,10 @@ function! s:RacerGoToDefinition()
         if res =~# " error: " && line !=# "END"
             call s:Warn(line)
         elseif line =~ "^MATCH"
-             let spl = RacerSplitLine(line[6:])
-             let linenum = spl[1]
-             let colnum = spl[2]
-             let fname = spl[3]
-             call RacerJumpToLocation(fname, linenum, colnum)
+             let linenum = split(line[6:], ",")[1]
+             let colnum = split(line[6:], ",")[2]
+             let fname = split(line[6:], ",")[3]
+             call s:RacerJumpToLocation(fname, linenum, colnum)
              break
         endif
     endfor
