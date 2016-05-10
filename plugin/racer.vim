@@ -101,6 +101,64 @@ function! s:RacerGetExpCompletions(base)
     return out
 endfunction
 
+function! s:RacerSplitLine(line)
+    let separator = ';'
+    let placeholder = '{PLACEHOLDER}'
+    let line = substitute(a:line, '\\;', placeholder, 'g')
+    let b:parts = split(line, separator)
+    let docs = substitute(substitute(substitute(substitute(get(b:parts, 7, ''), '^\"\(.*\)\"$', '\1', ''), '\\\"', '\"', 'g'), '\\''', '''', 'g'), '\\n', '\n', 'g')
+    let b:parts = add(b:parts[:6], docs)
+    let b:parts = map(copy(b:parts), 'substitute(v:val, ''{PLACEHOLDER}'', '';'', ''g'')')
+
+    return b:parts
+endfunction
+
+function! s:RacerShowDocumentation()
+    let l:winview = winsaveview()  " Save the current cursor position
+    " Move to the end of the word for the entire token to search.
+    " Move one char back to avoid moving to the end of the *next* word.
+    execute "normal he"
+    let col = col('.')
+    let b:tmpfname = tempname()
+    call writefile(getline(1, '$'), b:tmpfname)  " Create temporary file with the buffer's current state
+    let fname = expand("%:p")
+    let cmd = g:racer_cmd." complete-with-snippet ".line(".")." ".col." ".fname." ".b:tmpfname
+    let res = system(cmd)
+    call winrestview(l:winview)  " Restore de cursor position
+    call delete(b:tmpfname)  " Delete the temporary file
+    let lines = split(res, "\\n")
+    for line in lines
+       if line =~ "^MATCH"
+           let docs = s:RacerSplitLine(line[6:])[7]
+           if len(docs) > 0  " Only open doc buffer if there're docs to show
+               let bn = bufnr("__doc__")
+               if bn > 0
+                   let wi=index(tabpagebuflist(tabpagenr()), bn)
+                   if wi >= 0
+                       " If the __doc__ buffer is open in the current tab, jump to it
+                       silent execute (wi+1).'wincmd w'
+                   else
+                       silent execute "sbuffer ".bn
+                   endif
+               else
+                   split '__doc__'
+               endif
+
+               setlocal modifiable
+               setlocal noswapfile
+               setlocal buftype=nofile
+               silent normal! ggdG
+               silent $put=docs
+               silent normal! 1Gdd
+               setlocal nomodifiable
+               setlocal nomodified
+               setlocal filetype=rustdoc
+           endif
+           break
+       endif
+    endfor
+endfunction
+
 function! s:RacerGetCompletions(base)
     let col = col(".")-1
     call writefile(s:RacerGetBufferContents(a:base), b:tmpfname)
@@ -116,6 +174,7 @@ function! s:RacerGetCompletions(base)
        endif
     endfor
     call delete(b:tmpfname)
+
     return out
 endfunction
 
@@ -150,7 +209,7 @@ function! s:RacerGetBufferContents(base)
     " Re-combine the completion base word from omnicomplete with the current
     " line contents. Since the base word gets remove from the buffer before
     " this function is invoked we have to put it back in to out tmpfile.
-    let col = col(".")-1
+    let col = col(".") - 1
     let buf_lines = getline(1, '$')
     let line_contents = getline('.')
     let buf_lines[line('.') - 1] = strpart(line_contents, 0, col).a:base.strpart(line_contents, col, len(line_contents))
@@ -215,7 +274,8 @@ autocmd FileType rust nnoremap <buffer><silent> gd
             \ :call <SID>RacerGoToDefinition()<cr>
 autocmd FileType rust nnoremap <buffer><silent> gD
             \ :vsplit<cr>:call <SID>RacerGoToDefinition()<cr>
+autocmd FileType rust nnoremap <buffer>K
+            \ :call <SID>RacerShowDocumentation()<cr>
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
-
