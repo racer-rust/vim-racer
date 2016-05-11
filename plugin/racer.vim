@@ -160,10 +160,18 @@ function! s:RacerShowDocumentation()
 endfunction
 
 function! s:RacerGetCompletions(base)
-    let col = col(".")-1
-    call writefile(s:RacerGetBufferContents(a:base), b:tmpfname)
-    let fname = expand("%:p")
-    let cmd = g:racer_cmd." complete ".line(".")." ".col." \"".fname."\" \"".b:tmpfname."\""
+    let col = col(".") - 1
+    let b:tmpfname = tempname()
+    " HACK: Special case to offer autocompletion on a string literal
+    if getline(".")[:col-1] =~# "\".*\"\.$"
+        call writefile(["fn main() {", "    let x: &str = \"\";", "    x.", "}"], b:tmpfname)
+        let fname = expand("%:p")
+        let cmd = g:racer_cmd." complete 3 6 \"".fname."\" \"".b:tmpfname."\""
+    else
+        call writefile(s:RacerGetBufferContents(a:base), b:tmpfname)
+        let fname = expand("%:p")
+        let cmd = g:racer_cmd." complete ".line(".")." ".col." \"".fname."\" \"".b:tmpfname."\""
+    endif
     let res = system(cmd)
     let lines = split(res, "\\n")
     let out = []
