@@ -94,7 +94,9 @@ function! s:RacerGetExpCompletions(base)
                 let completion['menu'] = substitute(substitute(join(completions[5:], ','), '\(pub\|struct\) ',"","g"), '{*$', "", "")
             endif
 
-            let out = add(out, completion)
+            if stridx(tolower(completions[0]), tolower(a:base)) == 0
+              let out = add(out, completion)
+            endif
         endif
     endfor
     call delete(b:tmpfname)
@@ -178,7 +180,9 @@ function! s:RacerGetCompletions(base)
     for line in lines
        if line =~ "^MATCH"
            let completion = split(line[6:], ",")[0]
-           let out = add(out, completion)
+           if stridx(tolower(completion), tolower(a:base)) == 0
+             let out = add(out, completion)
+           endif
        endif
     endfor
     call delete(b:tmpfname)
