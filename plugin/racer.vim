@@ -281,13 +281,16 @@ function! s:ErrorCheck()
     endif
 endfunction
 
-autocmd FileType rust setlocal omnifunc=RacerComplete
-autocmd FileType rust nnoremap <buffer><silent> gd
-            \ :call <SID>RacerGoToDefinition()<cr>
-autocmd FileType rust nnoremap <buffer><silent> gD
-            \ :vsplit<cr>:call <SID>RacerGoToDefinition()<cr>
-autocmd FileType rust nnoremap <buffer>K
-            \ :call <SID>RacerShowDocumentation()<cr>
+augroup vim-racer
+  autocmd!
+  autocmd FileType rust setlocal omnifunc=RacerComplete
+  autocmd FileType rust nnoremap <buffer><silent> gd
+              \ :call <SID>RacerGoToDefinition()<cr>
+  autocmd FileType rust nnoremap <buffer><silent> gD
+              \ :vsplit<cr>:call <SID>RacerGoToDefinition()<cr>
+  autocmd FileType rust nnoremap <buffer>K
+              \ :call <SID>RacerShowDocumentation()<cr>
+augroup END
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
