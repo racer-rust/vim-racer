@@ -288,9 +288,11 @@ nnoremap <silent> <Plug>RacerShowDocumentation    :call <SID>RacerShowDocumentat
 augroup vim-racer
   autocmd!
   autocmd FileType rust setlocal omnifunc=RacerComplete
-  autocmd FileType rust nmap <buffer> gd <Plug>RacerGoToDefinition
-  autocmd FileType rust nmap <buffer> gD <Plug>RacerGoToDefinitionSplit
-  autocmd FileType rust nmap <buffer> K  <Plug>RacerShowDocumentation
+  if !exists('g:racer_no_default_keymappings')
+    autocmd FileType rust nmap <buffer> gd <Plug>RacerGoToDefinition
+    autocmd FileType rust nmap <buffer> gD <Plug>RacerGoToDefinitionSplit
+    autocmd FileType rust nmap <buffer> K  <Plug>RacerShowDocumentation
+  endif
 augroup END
 
 let &cpo = s:save_cpo
