@@ -281,13 +281,19 @@ function! s:ErrorCheck()
     endif
 endfunction
 
-autocmd FileType rust setlocal omnifunc=RacerComplete
-autocmd FileType rust nnoremap <buffer><silent> gd
-            \ :call <SID>RacerGoToDefinition()<cr>
-autocmd FileType rust nnoremap <buffer><silent> gD
-            \ :vsplit<cr>:call <SID>RacerGoToDefinition()<cr>
-autocmd FileType rust nnoremap <buffer>K
-            \ :call <SID>RacerShowDocumentation()<cr>
+nnoremap <silent> <Plug>RacerGoToDefinition       :call <SID>RacerGoToDefinition()<CR>
+nnoremap <silent> <Plug>RacerGoToDefinitionSplit  :vsplit<CR>:call <SID>RacerGoToDefinition()<CR>
+nnoremap <silent> <Plug>RacerShowDocumentation    :call <SID>RacerShowDocumentation()<CR>
+
+augroup vim-racer
+  autocmd!
+  autocmd FileType rust setlocal omnifunc=RacerComplete
+  if !exists('g:racer_no_default_keymappings')
+    autocmd FileType rust nmap <buffer> gd <Plug>RacerGoToDefinition
+    autocmd FileType rust nmap <buffer> gD <Plug>RacerGoToDefinitionSplit
+    autocmd FileType rust nmap <buffer> K  <Plug>RacerShowDocumentation
+  endif
+augroup END
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
