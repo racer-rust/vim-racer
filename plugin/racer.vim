@@ -281,18 +281,25 @@ function! s:ErrorCheck()
     endif
 endfunction
 
-nnoremap <silent> <Plug>RacerGoToDefinition       :call <SID>RacerGoToDefinition()<CR>
-nnoremap <silent> <Plug>RacerGoToDefinitionSplit  :vsplit<CR>:call <SID>RacerGoToDefinition()<CR>
-nnoremap <silent> <Plug>RacerShowDocumentation    :call <SID>RacerShowDocumentation()<CR>
+function! s:Init()
+    setlocal omnifunc=RacerComplete
+
+    nnoremap <silent><buffer> <Plug>RacerGoToDefinitionSplit
+          \ :call <SID>RacerGoToDefinition()<CR>
+    nnoremap <silent><buffer> <Plug>RacerGoToDefinitionSplit
+          \ :vsplit<CR>:call <SID>RacerGoToDefinition()<CR>
+    nnoremap <silent><buffer> <Plug>RacerShowDocumentation
+          \ :call <SID>RacerShowDocumentation()<CR>
+    if !exists('g:racer_no_default_keymappings')
+      nmap <buffer> gd <Plug>RacerGoToDefinition
+      nmap <buffer> gD <Plug>RacerGoToDefinitionSplit
+      nmap <buffer> K  <Plug>RacerShowDocumentation
+    endif
+endfunction
 
 augroup vim-racer
   autocmd!
-  autocmd FileType rust setlocal omnifunc=RacerComplete
-  if !exists('g:racer_no_default_keymappings')
-    autocmd FileType rust nmap <buffer> gd <Plug>RacerGoToDefinition
-    autocmd FileType rust nmap <buffer> gD <Plug>RacerGoToDefinitionSplit
-    autocmd FileType rust nmap <buffer> K  <Plug>RacerShowDocumentation
-  endif
+  autocmd FileType rust call s:Init()
 augroup END
 
 let &cpo = s:save_cpo
