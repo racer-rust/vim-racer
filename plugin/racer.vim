@@ -284,7 +284,7 @@ endfunction
 function! s:Init()
     setlocal omnifunc=RacerComplete
 
-    nnoremap <silent><buffer> <Plug>RacerGoToDefinitionSplit
+    nnoremap <silent><buffer> <Plug>RacerGoToDefinition
           \ :call <SID>RacerGoToDefinition()<CR>
     nnoremap <silent><buffer> <Plug>RacerGoToDefinitionSplit
           \ :vsplit<CR>:call <SID>RacerGoToDefinition()<CR>
