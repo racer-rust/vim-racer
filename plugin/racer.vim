@@ -284,14 +284,14 @@ endfunction
 function! s:Init()
     setlocal omnifunc=RacerComplete
 
-    nnoremap <silent><buffer> <Plug>RacerGoToDefinition
+    nnoremap <silent><buffer> <Plug>RacerGoToDefinitionDrect
           \ :call <SID>RacerGoToDefinition()<CR>
     nnoremap <silent><buffer> <Plug>RacerGoToDefinitionSplit
           \ :vsplit<CR>:call <SID>RacerGoToDefinition()<CR>
     nnoremap <silent><buffer> <Plug>RacerShowDocumentation
           \ :call <SID>RacerShowDocumentation()<CR>
     if !exists('g:racer_no_default_keymappings')
-      nmap <buffer> gd <Plug>RacerGoToDefinition
+      nmap <buffer> gd <Plug>RacerGoToDefinitionDrect
       nmap <buffer> gD <Plug>RacerGoToDefinitionSplit
       nmap <buffer> K  <Plug>RacerShowDocumentation
     endif
