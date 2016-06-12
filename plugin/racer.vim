@@ -287,12 +287,15 @@ function! s:Init()
     nnoremap <silent><buffer> <Plug>RacerGoToDefinitionDrect
           \ :call <SID>RacerGoToDefinition()<CR>
     nnoremap <silent><buffer> <Plug>RacerGoToDefinitionSplit
+          \ :split<CR>:call <SID>RacerGoToDefinition()<CR>
+    nnoremap <silent><buffer> <Plug>RacerGoToDefinitionVSplit
           \ :vsplit<CR>:call <SID>RacerGoToDefinition()<CR>
     nnoremap <silent><buffer> <Plug>RacerShowDocumentation
           \ :call <SID>RacerShowDocumentation()<CR>
     if !exists('g:racer_no_default_keymappings')
       nmap <buffer> gd <Plug>RacerGoToDefinitionDrect
-      nmap <buffer> gD <Plug>RacerGoToDefinitionSplit
+      nmap <buffer> gs <Plug>RacerGoToDefinitionSplit
+      nmap <buffer> gv <Plug>RacerGoToDefinitionVSplit
       nmap <buffer> K  <Plug>RacerShowDocumentation
     endif
 endfunction
