@@ -22,6 +22,11 @@ This plugin allows vim to use [Racer](http://github.com/phildawes/racer) for Rus
   ```
   Plug 'racer-rust/vim-racer'
   ```
+  
+  Pathogen users:
+  ```
+  git clone --depth=1 https://github.com/racer-rust/vim-racer.git ~/.vim/bundle/vim-racer
+  ```
 
 2. Add `g:racer_cmd` and `$RUST_SRC_PATH` variables to your `.vimrc`. Also it's worth turning on 'hidden' mode for buffers otherwise you need to save the current buffer every time you do a goto-definition. E.g.:
 
