@@ -36,6 +36,12 @@ This plugin allows vim to use [Racer](http://github.com/phildawes/racer) for Rus
      let $RUST_SRC_PATH="<path-to-rust-srcdir>/src/"
      ```
 
-3. In insert mode use `C-x-C-o` to search for completions
+## Mappings
 
-4. In normal mode type `gd` to go to a definition
+* In insert mode use `C-x-C-o` to search for completions
+
+* In normal mode type `gd` to go to a definition
+
+* In normal mode type `gs` to splitted open a definition
+
+* In normal mode type `gv` to vsplitted open a definition
