@@ -299,7 +299,7 @@ function! s:Init()
     if !exists('g:racer_no_default_keymappings')
       nmap <buffer> gd <Plug>RacerGoToDefinitionDrect
       nmap <buffer> gs <Plug>RacerGoToDefinitionSplit
-      nmap <buffer> gv <Plug>RacerGoToDefinitionVSplit
+      nmap <buffer> gx <Plug>RacerGoToDefinitionVSplit
       nmap <buffer> K  <Plug>RacerShowDocumentation
     endif
 endfunction

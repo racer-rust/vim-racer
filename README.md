@@ -44,4 +44,4 @@ This plugin allows vim to use [Racer](http://github.com/phildawes/racer) for Rus
 
 * In normal mode type `gs` to splitted open a definition
 
-* In normal mode type `gv` to vsplitted open a definition
+* In normal mode type `gx` to vsplitted open a definition
