@@ -27,6 +27,9 @@ if !exists('g:racer_cmd')
     let g:racer_cmd = 'racer'
 endif
 
+" Expand "~" and environment variables
+let g:racer_cmd = expand(g:racer_cmd)
+
 if !exists('$RUST_SRC_PATH')
     let s:rust_src_default = 1
     if isdirectory("/usr/local/src/rust/src")
