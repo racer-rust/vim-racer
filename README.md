@@ -6,7 +6,7 @@ This plugin allows vim to use [Racer](http://github.com/phildawes/racer) for Rus
 
 1. Build / Install [Racer](http://github.com/phildawes/racer)
 
-1. Install using Pathogen, Vundle or NeoBundle. Or, copy `plugin/racer.vim` into your `~/.vim/plugin` directory.
+2. Install using Pathogen, Vundle or NeoBundle. Or, copy `plugin/racer.vim` into your `~/.vim/plugin` directory.
 
   Vundle users:
   ```
@@ -28,13 +28,19 @@ This plugin allows vim to use [Racer](http://github.com/phildawes/racer) for Rus
   git clone --depth=1 https://github.com/racer-rust/vim-racer.git ~/.vim/bundle/vim-racer
   ```
 
-2. Add `g:racer_cmd` and `$RUST_SRC_PATH` variables to your `.vimrc`. Also it's worth turning on 'hidden' mode for buffers otherwise you need to save the current buffer every time you do a goto-definition. E.g.:
+3. Add `g:racer_cmd` and `$RUST_SRC_PATH` variables to your `.vimrc`. Also it's worth turning on 'hidden' mode for buffers otherwise you need to save the current buffer every time you do a goto-definition. E.g.:
 
-     ```
-     set hidden
-     let g:racer_cmd = "<path-to-racer>/target/release/racer"
-     let $RUST_SRC_PATH="<path-to-rust-srcdir>/src/"
-     ```
+  ```
+  set hidden
+  let g:racer_cmd = "<path-to-racer>/target/release/racer"
+  let $RUST_SRC_PATH="<path-to-rust-srcdir>/src/"
+  ```
+
+4. If you want completions to show the complete function definition (e.g. its arguments and return type), enable the experimental completer:
+
+  ```
+  let g:racer_experimental_completer = 1
+  ```
 
 ## Mappings
 
