@@ -29,6 +29,7 @@ endif
 
 " Expand "~" and environment variables
 let g:racer_cmd = expand(g:racer_cmd)
+let $RUST_SRC_PATH = expand($RUST_SRC_PATH)
 
 if !exists('$RUST_SRC_PATH')
     let s:rust_src_default = 1
