@@ -60,12 +60,13 @@ function! s:RacerGetPrefixCol(base)
     let cmd = g:racer_cmd." prefix ".line(".")." ".col." ".b:tmpfname
     let res = system(cmd)
     let prefixline = split(res, "\\n")[0]
-    let startcol = split(prefixline[7:], ",")[0]
-    return startcol
+    let startbyte = split(prefixline[7:], ",")[0]
+    return startbyte - line2byte(byte2line(startbyte)) + 1
 endfunction
 
 function! s:RacerGetExpCompletions(base)
     let col = col(".")-1
+    let b:tmpfname = tempname()
     call writefile(s:RacerGetBufferContents(a:base), b:tmpfname)
     let fname = expand("%:p")
     let cmd = g:racer_cmd." complete ".line(".")." ".col." \"".fname."\" \"".b:tmpfname."\""
