@@ -237,10 +237,11 @@ function! s:RacerJumpToLocation(filename, linenum, colnum)
 endfunction
 
 function! RacerComplete(findstart, base)
+    if s:ErrorCheck()
+        return -1
+    endif
+
     if a:findstart
-        if s:ErrorCheck()
-            return -1
-        endif
 
         return s:RacerGetPrefixCol(a:base)
     else
