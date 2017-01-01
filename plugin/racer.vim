@@ -257,7 +257,7 @@ function! RacerComplete(findstart, base)
 endfunction
 
 function! s:Warn(msg)
-    echohl WarningMsg | echomsg a:msg | echohl NONE
+    echohl WarningMsg | echomsg a:msg | echohl None
 endfunction
 
 function! s:ErrorCheck()
