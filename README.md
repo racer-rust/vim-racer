@@ -41,12 +41,13 @@ This plugin allows vim to use [Racer](http://github.com/phildawes/racer) for Rus
   let g:racer_experimental_completer = 1
   ```
 
-## Mappings
+## Example Mappings
 
-* In insert mode use `C-x-C-o` to search for completions
+vim-racer enables `C-x-C-o` to search for completions and provides several `<Plug>` mappings for source code navigation. These mappings are not enabled by default. 
 
-* In normal mode type `gd` to go to a definition
-
-* In normal mode type `gs` to splitted open a definition
-
-* In normal mode type `gx` to vsplitted open a definition
+```
+au FileType rust nmap <leader>gd <Plug>(rust-def)
+au FileType rust nmap <leader>gs <Plug>(rust-def-split)
+au FileType rust nmap <leader>gx <Plug>(rust-def-split-vertical)
+au FileType rust nmap <leader>d  <Plug>(rust-doc)
+```

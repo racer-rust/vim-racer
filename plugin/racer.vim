@@ -270,20 +270,14 @@ endfunction
 function! s:Init()
     setlocal omnifunc=RacerComplete
 
-    nnoremap <silent><buffer> <Plug>RacerGoToDefinitionDrect
+    nnoremap <silent><buffer> <Plug>(rust-def)
           \ :call <SID>RacerGoToDefinition()<CR>
-    nnoremap <silent><buffer> <Plug>RacerGoToDefinitionSplit
+    nnoremap <silent><buffer> <Plug>(rust-def-split)
           \ :split<CR>:call <SID>RacerGoToDefinition()<CR>
-    nnoremap <silent><buffer> <Plug>RacerGoToDefinitionVSplit
+    nnoremap <silent><buffer> <Plug>(rust-def-split-vertical)
           \ :vsplit<CR>:call <SID>RacerGoToDefinition()<CR>
-    nnoremap <silent><buffer> <Plug>RacerShowDocumentation
+    nnoremap <silent><buffer> <Plug>(rust-doc)
           \ :call <SID>RacerShowDocumentation()<CR>
-    if !exists('g:racer_no_default_keymappings')
-      nmap <buffer> gd <Plug>RacerGoToDefinitionDrect
-      nmap <buffer> gs <Plug>RacerGoToDefinitionSplit
-      nmap <buffer> gx <Plug>RacerGoToDefinitionVSplit
-      nmap <buffer> K  <Plug>RacerShowDocumentation
-    endif
 endfunction
 
 augroup vim-racer
