@@ -32,7 +32,7 @@ This plugin allows vim to use [Racer](http://github.com/phildawes/racer) for Rus
 
   ```
   set hidden
-  let g:racer_cmd = "<path-to-racer>/target/release/racer"
+  let g:racer_cmd = "/path/to/racer/bin"
   ```
 
 4. If you want completions to show the complete function definition (e.g. its arguments and return type), enable the experimental completer:
@@ -41,12 +41,20 @@ This plugin allows vim to use [Racer](http://github.com/phildawes/racer) for Rus
   let g:racer_experimental_completer = 1
   ```
 
-## Mappings
+## Example Mappings
 
-* In insert mode use `C-x-C-o` to search for completions
+vim-racer enables `C-x-C-o` to search for completions and provides several
+`<Plug>` mappings for source code navigation. These mappings are not enabled by
+default but you can easily use them by adding the following lines to your
+`.vimrc` (Or `init.vim` in case of Neovim). 
 
-* In normal mode type `gd` to go to a definition
+For example, with the following mappings you can navigate to the identifier under
+the cursor and open it on the current buffer, on an horizontal or vertical split,
+or go straight to the documentation:
 
-* In normal mode type `gs` to splitted open a definition
-
-* In normal mode type `gx` to vsplitted open a definition
+```
+au FileType rust nmap gd <Plug>(rust-def)
+au FileType rust nmap gs <Plug>(rust-def-split)
+au FileType rust nmap gx <Plug>(rust-def-vertical)
+au FileType rust nmap <leader>gd <Plug>(rust-doc)
+```
