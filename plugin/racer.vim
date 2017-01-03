@@ -274,7 +274,7 @@ function! s:Init()
           \ :call <SID>RacerGoToDefinition()<CR>
     nnoremap <silent><buffer> <Plug>(rust-def-split)
           \ :split<CR>:call <SID>RacerGoToDefinition()<CR>
-    nnoremap <silent><buffer> <Plug>(rust-def-split-vertical)
+    nnoremap <silent><buffer> <Plug>(rust-def-vertical)
           \ :vsplit<CR>:call <SID>RacerGoToDefinition()<CR>
     nnoremap <silent><buffer> <Plug>(rust-doc)
           \ :call <SID>RacerShowDocumentation()<CR>
