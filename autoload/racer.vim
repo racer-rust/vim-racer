@@ -35,7 +35,8 @@ function! s:RacerGetExpCompletions(base)
             let completion = { 'kind' : kind, 'word' : completions[0], 'dup':1 }
             let info = join(completions[5:], ',')
 
-            if kind ==# 'f' " function
+            if kind ==# 'f'
+                " function
                 let completion['menu'] = substitute(
                     \   substitute(
                     \     substitute(info, '\(pub\|fn\) ',"","g"),
@@ -92,17 +93,21 @@ function! racer#ShowDocumentation()
     execute "normal he"
     let col = col('.')
     let b:tmpfname = tempname()
-    call writefile(getline(1, '$'), b:tmpfname)  " Create temporary file with the buffer's current state
+    " Create temporary file with the buffer's current state
+    call writefile(getline(1, '$'), b:tmpfname)
     let fname = expand("%:p")
     let cmd = g:racer_cmd." complete-with-snippet ".line(".")." ".col." ".fname." ".b:tmpfname
     let res = system(cmd)
-    call winrestview(winview)  " Restore de cursor position
-    call delete(b:tmpfname)  " Delete the temporary file
+    " Restore de cursor position
+    call winrestview(winview)
+    " Delete the temporary file
+    call delete(b:tmpfname)
     let lines = split(res, "\\n")
     for line in lines
        if line =~ "^MATCH"
            let docs = s:RacerSplitLine(line[6:])[7]
-           if len(docs) > 0  " Only open doc buffer if there're docs to show
+           if len(docs) > 0
+               " Only open doc buffer if there're docs to show
                let bn = bufnr("__doc__")
                if bn > 0
                    let wi=index(tabpagebuflist(tabpagenr()), bn)
