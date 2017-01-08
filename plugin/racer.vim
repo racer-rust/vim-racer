@@ -57,7 +57,7 @@ nnoremap <silent><buffer> <Plug>(rust-doc)
 
 augroup vim-racer
     autocmd!
-    autocmd FileType rust call racer#Init()
+    autocmd FileType rust setlocal omnifunc=racer#RacerComplete
 augroup END
 
 let &cpo = s:save_cpo

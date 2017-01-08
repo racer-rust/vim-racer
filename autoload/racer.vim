@@ -226,8 +226,3 @@ function! s:ErrorCheck()
         return 1
     endif
 endfunction
-
-function! racer#Init()
-    setlocal omnifunc=racer#RacerComplete
-endfunction
-
