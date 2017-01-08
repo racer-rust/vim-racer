@@ -189,11 +189,11 @@ function! racer#GoToDefinition()
         if res =~# " error: " && line !=# "END"
             call s:Warn(line)
         elseif line =~ "^MATCH"
-             let linenum = split(line[6:], ",")[1]
-             let colnum = split(line[6:], ",")[2]
-             let fname = split(line[6:], ",")[3]
-             call s:RacerJumpToLocation(fname, linenum, colnum)
-             break
+            let linenum = split(line[6:], ",")[1]
+            let colnum = split(line[6:], ",")[2]
+            let fname = split(line[6:], ",")[3]
+            call s:RacerJumpToLocation(fname, linenum, colnum)
+            break
         endif
     endfor
     call delete(tmpfname)
@@ -207,9 +207,9 @@ function! s:RacerGetBufferContents(base)
     let buf_lines = getline(1, '$')
     let line_contents = getline('.')
     let buf_lines[line('.') - 1] =
-                \ strpart(line_contents, 0, col) .
-                \ a:base .
-                \ strpart(line_contents, col, len(line_contents))
+        \ strpart(line_contents, 0, col) .
+        \ a:base .
+        \ strpart(line_contents, col, len(line_contents))
     return buf_lines
 endfunction
 
