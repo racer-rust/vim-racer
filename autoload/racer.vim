@@ -186,7 +186,7 @@ function! racer#GoToDefinition()
     let res = system(cmd)
     let lines = split(res, '\n')
     for line in lines
-        if res #=~# ' error: ' && line !=# 'END'
+        if res =~# ' error: ' && line !=# 'END'
             call s:Warn(line)
         elseif line =~# '^MATCH'
             let linenum = split(line[6:], ',')[1]
