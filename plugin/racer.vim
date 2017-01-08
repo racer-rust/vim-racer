@@ -35,7 +35,7 @@ if !exists('g:racer_cmd')
     let g:racer_cmd = 'racer'
 endif
 
-" Expand "~" and environment variables
+" Expand '~' and environment variables
 let g:racer_cmd = expand(g:racer_cmd)
 
 if !exists('g:racer_experimental_completer')
