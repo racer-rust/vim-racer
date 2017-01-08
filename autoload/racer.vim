@@ -143,10 +143,10 @@ function! racer#ShowDocumentation()
 endfunction
 
 function! s:RacerGetCompletions(base)
-    let col = col(".") - 1
+    let col = col('.') - 1
     let b:tmpfname = tempname()
     " HACK: Special case to offer autocompletion on a string literal
-    if getline(".")[:col-1] =~# '".*"\.$'
+    if getline('.')[:col-1] =~# '".*"\.$'
         call writefile(['fn main() {', '    let x: &str = "";', '    x.', '}'], b:tmpfname)
         let fname = expand('%:p')
         let cmd = g:racer_cmd . ' complete 3 6 "' . fname . '" "' . b:tmpfname . '"'
