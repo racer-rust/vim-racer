@@ -29,7 +29,7 @@ function! s:RacerGetExpCompletions(base)
     let out = []
 
     for line in lines
-        if line !~ '^MATCH'
+        if line !~# '^MATCH'
             continue
         endif
 
@@ -106,7 +106,7 @@ function! racer#ShowDocumentation()
     call delete(b:tmpfname)
     let lines = split(res, '\n')
     for line in lines
-        if line !~ '^MATCH'
+        if line !~# '^MATCH'
             continue
         endif
 
@@ -159,7 +159,7 @@ function! s:RacerGetCompletions(base)
     let lines = split(res, '\n')
     let out = []
     for line in lines
-        if line !~ '^MATCH'
+        if line !~# '^MATCH'
             continue
         endif
         let completion = split(line[6:], ',')[0]
@@ -186,9 +186,9 @@ function! racer#GoToDefinition()
     let res = system(cmd)
     let lines = split(res, '\n')
     for line in lines
-        if res =~# ' error: ' && line !=# 'END'
+        if res #=~# ' error: ' && line !=# 'END'
             call s:Warn(line)
-        elseif line =~ '^MATCH'
+        elseif line =~# '^MATCH'
             let linenum = split(line[6:], ',')[1]
             let colnum = split(line[6:], ',')[2]
             let fname = split(line[6:], ',')[3]
