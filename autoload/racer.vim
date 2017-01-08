@@ -32,21 +32,31 @@ function! s:RacerGetExpCompletions(base)
         if line =~ "^MATCH"
             let completions = split(line[6:], ",")
             let kind = get(typeMap, completions[4])
-            let completion = {'kind' : kind, 'word' : completions[0], 'dup':1 }
+            let completion = { 'kind' : kind, 'word' : completions[0], 'dup':1 }
+            let info = join(completions[5:], ',')
 
             if kind ==# 'f' " function
-                let completion['menu'] = substitute(substitute(substitute(join(completions[5:], ','), '\(pub\|fn\) ',"","g"), '{*$', "", ""), ' where\s\?.*$', "", "")
+                let completion['menu'] = substitute(
+                    \   substitute(
+                    \     substitute(info, '\(pub\|fn\) ',"","g"),
+                    \     '{*$', "", ""
+                    \   ),
+                    \   ' where\s\?.*$', "", ""
+                    \ )
                 if g:racer_insert_paren == 1
                     let completion['abbr'] = completions[0]
                     let completion['word'] .= "("
                 endif
-                let completion['info'] = join(completions[5:], ',')
+                let completion['info'] = info
             elseif kind ==# 's' " struct
-                let completion['menu'] = substitute(substitute(join(completions[5:], ','), '\(pub\|struct\) ',"","g"), '{*$', "", "")
+                let completion['menu'] = substitute(
+                    \   substitute(info, '\(pub\|struct\) ',"","g"),
+                    \   '{*$', "", ""
+                    \ )
             endif
 
             if stridx(tolower(completions[0]), tolower(a:base)) == 0
-              let out = add(out, completion)
+                let out = add(out, completion)
             endif
         endif
     endfor
@@ -59,7 +69,16 @@ function! s:RacerSplitLine(line)
     let placeholder = '{PLACEHOLDER}'
     let line = substitute(a:line, '\\;', placeholder, 'g')
     let parts = split(line, separator)
-    let docs = substitute(substitute(substitute(substitute(get(parts, 7, ''), '^\"\(.*\)\"$', '\1', ''), '\\\"', '\"', 'g'), '\\''', '''', 'g'), '\\n', '\n', 'g')
+    let docs = substitute(
+        \   substitute(
+        \     substitute(
+        \       substitute(get(parts, 7, ''), '^\"\(.*\)\"$', '\1', ''),
+        \       '\\\"', '\"', 'g'
+        \     ),
+        \     '\\''', '''', 'g'
+        \   ),
+        \   '\\n', '\n', 'g'
+        \ )
     let parts = add(parts[:6], docs)
     let parts = map(copy(parts), 'substitute(v:val, ''{PLACEHOLDER}'', '';'', ''g'')')
 
@@ -175,7 +194,10 @@ function! s:RacerGetBufferContents(base)
     let col = col(".") - 1
     let buf_lines = getline(1, '$')
     let line_contents = getline('.')
-    let buf_lines[line('.') - 1] = strpart(line_contents, 0, col).a:base.strpart(line_contents, col, len(line_contents))
+    let buf_lines[line('.') - 1] =
+                \ strpart(line_contents, 0, col) .
+                \ a:base .
+                \ strpart(line_contents, col, len(line_contents))
     return buf_lines
 endfunction
 
