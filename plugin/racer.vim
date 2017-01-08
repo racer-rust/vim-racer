@@ -19,10 +19,10 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 if !exists('g:racer_cmd')
-    let path = escape(expand('<sfile>:p:h'), '\') . '/../target/release/'
-    if isdirectory(path)
+    let s:path = escape(expand('<sfile>:p:h'), '\') . '/../target/release/'
+    if isdirectory(s:path)
         let s:pathsep = has("win32") ? ';' : ':'
-        let $PATH .= s:pathsep . path
+        let $PATH .= s:pathsep . s:path
     endif
     let g:racer_cmd = 'racer'
 endif

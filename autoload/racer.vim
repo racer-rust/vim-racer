@@ -58,16 +58,16 @@ function! s:RacerSplitLine(line)
     let separator = ';'
     let placeholder = '{PLACEHOLDER}'
     let line = substitute(a:line, '\\;', placeholder, 'g')
-    let b:parts = split(line, separator)
-    let docs = substitute(substitute(substitute(substitute(get(b:parts, 7, ''), '^\"\(.*\)\"$', '\1', ''), '\\\"', '\"', 'g'), '\\''', '''', 'g'), '\\n', '\n', 'g')
-    let b:parts = add(b:parts[:6], docs)
-    let b:parts = map(copy(b:parts), 'substitute(v:val, ''{PLACEHOLDER}'', '';'', ''g'')')
+    let parts = split(line, separator)
+    let docs = substitute(substitute(substitute(substitute(get(parts, 7, ''), '^\"\(.*\)\"$', '\1', ''), '\\\"', '\"', 'g'), '\\''', '''', 'g'), '\\n', '\n', 'g')
+    let parts = add(parts[:6], docs)
+    let parts = map(copy(parts), 'substitute(v:val, ''{PLACEHOLDER}'', '';'', ''g'')')
 
-    return b:parts
+    return parts
 endfunction
 
 function! racer#ShowDocumentation()
-    let l:winview = winsaveview()  " Save the current cursor position
+    let winview = winsaveview()  " Save the current cursor position
     " Move to the end of the word for the entire token to search.
     " Move one char back to avoid moving to the end of the *next* word.
     execute "normal he"
@@ -77,7 +77,7 @@ function! racer#ShowDocumentation()
     let fname = expand("%:p")
     let cmd = g:racer_cmd." complete-with-snippet ".line(".")." ".col." ".fname." ".b:tmpfname
     let res = system(cmd)
-    call winrestview(l:winview)  " Restore de cursor position
+    call winrestview(winview)  " Restore de cursor position
     call delete(b:tmpfname)  " Delete the temporary file
     let lines = split(res, "\\n")
     for line in lines
