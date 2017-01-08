@@ -29,36 +29,38 @@ function! s:RacerGetExpCompletions(base)
     let out = []
 
     for line in lines
-        if line =~ "^MATCH"
-            let completions = split(line[6:], ",")
-            let kind = get(typeMap, completions[4])
-            let completion = { 'kind' : kind, 'word' : completions[0], 'dup':1 }
-            let info = join(completions[5:], ',')
+        if line !~ "^MATCH"
+            continue
+        endif
 
-            if kind ==# 'f'
-                " function
-                let completion['menu'] = substitute(
-                    \   substitute(
-                    \     substitute(info, '\(pub\|fn\) ',"","g"),
-                    \     '{*$', "", ""
-                    \   ),
-                    \   ' where\s\?.*$', "", ""
-                    \ )
-                if g:racer_insert_paren == 1
-                    let completion['abbr'] = completions[0]
-                    let completion['word'] .= "("
-                endif
-                let completion['info'] = info
-            elseif kind ==# 's' " struct
-                let completion['menu'] = substitute(
-                    \   substitute(info, '\(pub\|struct\) ',"","g"),
-                    \   '{*$', "", ""
-                    \ )
-            endif
+        let completions = split(line[6:], ",")
+        let kind = get(typeMap, completions[4])
+        let completion = { 'kind' : kind, 'word' : completions[0], 'dup':1 }
+        let info = join(completions[5:], ',')
 
-            if stridx(tolower(completions[0]), tolower(a:base)) == 0
-                let out = add(out, completion)
+        if kind ==# 'f'
+            " function
+            let completion['menu'] = substitute(
+                \   substitute(
+                \     substitute(info, '\(pub\|fn\) ',"","g"),
+                \     '{*$', "", ""
+                \   ),
+                \   ' where\s\?.*$', "", ""
+                \ )
+            if g:racer_insert_paren == 1
+                let completion['abbr'] = completions[0]
+                let completion['word'] .= "("
             endif
+            let completion['info'] = info
+        elseif kind ==# 's' " struct
+            let completion['menu'] = substitute(
+                \   substitute(info, '\(pub\|struct\) ',"","g"),
+                \   '{*$', "", ""
+                \ )
+        endif
+
+        if stridx(tolower(completions[0]), tolower(a:base)) == 0
+            let out = add(out, completion)
         endif
     endfor
     call delete(b:tmpfname)
@@ -104,35 +106,39 @@ function! racer#ShowDocumentation()
     call delete(b:tmpfname)
     let lines = split(res, "\\n")
     for line in lines
-       if line =~ "^MATCH"
-           let docs = s:RacerSplitLine(line[6:])[7]
-           if len(docs) > 0
-               " Only open doc buffer if there're docs to show
-               let bn = bufnr("__doc__")
-               if bn > 0
-                   let wi=index(tabpagebuflist(tabpagenr()), bn)
-                   if wi >= 0
-                       " If the __doc__ buffer is open in the current tab, jump to it
-                       silent execute (wi+1).'wincmd w'
-                   else
-                       silent execute "sbuffer ".bn
-                   endif
-               else
-                   split '__doc__'
-               endif
+        if line !~ "^MATCH"
+            continue
+        endif
 
-               setlocal modifiable
-               setlocal noswapfile
-               setlocal buftype=nofile
-               silent normal! ggdG
-               silent $put=docs
-               silent normal! 1Gdd
-               setlocal nomodifiable
-               setlocal nomodified
-               setlocal filetype=rustdoc
-           endif
-           break
-       endif
+        let docs = s:RacerSplitLine(line[6:])[7]
+        if len(docs) == 0
+            break
+        endif
+
+        " Only open doc buffer if there're docs to show
+        let bn = bufnr("__doc__")
+        if bn > 0
+            let wi=index(tabpagebuflist(tabpagenr()), bn)
+            if wi >= 0
+                " If the __doc__ buffer is open in the current tab, jump to it
+                silent execute (wi+1).'wincmd w'
+            else
+                silent execute "sbuffer ".bn
+            endif
+        else
+            split '__doc__'
+        endif
+
+        setlocal modifiable
+        setlocal noswapfile
+        setlocal buftype=nofile
+        silent normal! ggdG
+        silent $put=docs
+        silent normal! 1Gdd
+        setlocal nomodifiable
+        setlocal nomodified
+        setlocal filetype=rustdoc
+        break
     endfor
 endfunction
 
@@ -153,12 +159,13 @@ function! s:RacerGetCompletions(base)
     let lines = split(res, "\\n")
     let out = []
     for line in lines
-       if line =~ "^MATCH"
-           let completion = split(line[6:], ",")[0]
-           if stridx(tolower(completion), tolower(a:base)) == 0
-               let out = add(out, completion)
-           endif
-       endif
+        if line !~ "^MATCH"
+            continue
+        endif
+        let completion = split(line[6:], ",")[0]
+        if stridx(tolower(completion), tolower(a:base)) == 0
+            let out = add(out, completion)
+        endif
     endfor
     call delete(b:tmpfname)
 
