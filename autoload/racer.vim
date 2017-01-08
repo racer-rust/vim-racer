@@ -132,7 +132,7 @@ function! s:RacerGetCompletions(base)
        if line =~ "^MATCH"
            let completion = split(line[6:], ",")[0]
            if stridx(tolower(completion), tolower(a:base)) == 0
-             let out = add(out, completion)
+               let out = add(out, completion)
            endif
        endif
     endfor
@@ -229,6 +229,5 @@ endfunction
 
 function! racer#Init()
     setlocal omnifunc=racer#RacerComplete
-
 endfunction
 

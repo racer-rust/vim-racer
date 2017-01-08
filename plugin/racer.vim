@@ -10,7 +10,7 @@
 " (This plugin is best used with the 'hidden' option enabled so that switching buffers doesn't force you to save)
 
 if exists('g:loaded_racer')
-  finish
+    finish
 endif
 
 let g:loaded_racer = 1
@@ -48,8 +48,8 @@ nnoremap <silent><buffer> <Plug>(rust-doc)
         \ :call racer#ShowDocumentation()<CR>
 
 augroup vim-racer
-  autocmd!
-  autocmd FileType rust call racer#Init()
+    autocmd!
+    autocmd FileType rust call racer#Init()
 augroup END
 
 let &cpo = s:save_cpo
