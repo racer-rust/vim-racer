@@ -118,7 +118,7 @@ function! racer#ShowDocumentation()
         " Only open doc buffer if there're docs to show
         let bn = bufnr("__doc__")
         if bn > 0
-            let wi=index(tabpagebuflist(tabpagenr()), bn)
+            let wi = index(tabpagebuflist(tabpagenr()), bn)
             if wi >= 0
                 " If the __doc__ buffer is open in the current tab, jump to it
                 silent execute (wi+1).'wincmd w'
@@ -214,20 +214,22 @@ function! s:RacerGetBufferContents(base)
 endfunction
 
 function! s:RacerJumpToLocation(filename, linenum, colnum)
-    if(a:filename != '')
-        " Record jump mark
-        normal! m`
-        if a:filename != bufname('%')
-            try
-                exec 'keepjumps e ' . fnameescape(a:filename)
-            catch /^Vim\%((\a\+)\)\=:E37/
-                " When the buffer is not saved, E37 is thrown.  We can ignore it.
-            endtry
-        endif
-        call cursor(a:linenum, a:colnum+1)
-        " Center definition on screen
-        normal! zz
+    if a:filename == ''
+        return
     endif
+
+    " Record jump mark
+    normal! m`
+    if a:filename != bufname('%')
+        try
+            exec 'keepjumps e ' . fnameescape(a:filename)
+        catch /^Vim\%((\a\+)\)\=:E37/
+            " When the buffer is not saved, E37 is thrown.  We can ignore it.
+        endtry
+    endif
+    call cursor(a:linenum, a:colnum + 1)
+    " Center definition on screen
+    normal! zz
 endfunction
 
 function! racer#RacerComplete(findstart, base)
