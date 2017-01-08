@@ -9,26 +9,26 @@
 
 " Read the HTML syntax to start with
 if version < 600
-  so <sfile>:p:h/html.vim
+    so <sfile>:p:h/html.vim
 else
-  runtime! syntax/html.vim
+    runtime! syntax/html.vim
 
-  if exists('b:current_syntax')
-    unlet b:current_syntax
-  endif
+    if exists('b:current_syntax')
+        unlet b:current_syntax
+    endif
 endif
 
 if version < 600
-  syntax clear
+    syntax clear
 elseif exists("b:current_syntax")
-  finish
+    finish
 endif
 
 " don't use standard HiLink, it will not work with included syntax files
 if version < 508
-  command! -nargs=+ HtmlHiLink hi link <args>
+    command! -nargs=+ HtmlHiLink hi link <args>
 else
-  command! -nargs=+ HtmlHiLink hi def link <args>
+    command! -nargs=+ HtmlHiLink hi def link <args>
 endif
 
 syn spell toplevel
@@ -38,8 +38,8 @@ syn sync linebreaks=1
 let s:conceal = ''
 let s:concealends = ''
 if has('conceal') && get(g:, 'vim_markdown_conceal', 1)
-  let s:conceal = ' conceal'
-  let s:concealends = ' concealends'
+    let s:conceal = ' conceal'
+    let s:concealends = ' concealends'
 endif
 
 " additions to HTML groups
@@ -114,35 +114,35 @@ syn match  mkdRule         /^\s*\*\{3,5}$/
 
 " YAML frontmatter
 if get(g:, 'vim_markdown_frontmatter', 0)
-  syn include @yamlTop syntax/yaml.vim
-  syn region Comment matchgroup=mkdDelimiter start="\%^---$" end="^---$" contains=@yamlTop keepend
-  unlet! b:current_syntax
+    syn include @yamlTop syntax/yaml.vim
+    syn region Comment matchgroup=mkdDelimiter start="\%^---$" end="^---$" contains=@yamlTop keepend
+    unlet! b:current_syntax
 endif
 
 if get(g:, 'vim_markdown_toml_frontmatter', 0)
-  try
-    syn include @tomlTop syntax/toml.vim
-    syn region Comment matchgroup=mkdDelimiter start="\%^+++$" end="^+++$" transparent contains=@tomlTop keepend
-    unlet! b:current_syntax
-  catch /E484/
-    syn region Comment matchgroup=mkdDelimiter start="\%^+++$" end="^+++$"
-  endtry
+    try
+        syn include @tomlTop syntax/toml.vim
+        syn region Comment matchgroup=mkdDelimiter start="\%^+++$" end="^+++$" transparent contains=@tomlTop keepend
+        unlet! b:current_syntax
+    catch /E484/
+        syn region Comment matchgroup=mkdDelimiter start="\%^+++$" end="^+++$"
+    endtry
 endif
 
 if get(g:, 'vim_markdown_json_frontmatter', 0)
-  try
-    syn include @jsonTop syntax/json.vim
-    syn region Comment matchgroup=mkdDelimiter start="\%^{$" end="^}$" contains=@jsonTop keepend
-    unlet! b:current_syntax
-  catch /E484/
-    syn region Comment matchgroup=mkdDelimiter start="\%^{$" end="^}$"
-  endtry
+    try
+        syn include @jsonTop syntax/json.vim
+        syn region Comment matchgroup=mkdDelimiter start="\%^{$" end="^}$" contains=@jsonTop keepend
+        unlet! b:current_syntax
+    catch /E484/
+        syn region Comment matchgroup=mkdDelimiter start="\%^{$" end="^}$"
+    endtry
 endif
 
 if get(g:, 'vim_markdown_math', 0)
-  syn include @tex syntax/tex.vim
-  syn region mkdMath start="\\\@<!\$" end="\$" contains=@tex keepend
-  syn region mkdMath start="\\\@<!\$\$" end="\$\$" contains=@tex keepend
+    syn include @tex syntax/tex.vim
+    syn region mkdMath start="\\\@<!\$" end="\$" contains=@tex keepend
+    syn region mkdMath start="\\\@<!\$\$" end="\$\$" contains=@tex keepend
 endif
 
 syn include @rust syntax/rust.vim
