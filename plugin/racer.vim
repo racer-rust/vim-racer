@@ -18,10 +18,18 @@ let g:loaded_racer = 1
 let s:save_cpo = &cpo
 set cpo&vim
 
+let s:is_win = has('win32') || has('win64')
+
 if !exists('g:racer_cmd')
-    let s:path = escape(expand('<sfile>:p:h'), '\') . '/../target/release/'
+    let s:sep = s:is_win ? '\' : '/'
+    le s:path = join([
+            \ escape(expand('<sfile>:p:h'), '\'),
+            \ '..',
+            \ 'target',
+            \ 'release',
+            \ ], s:sep)
     if isdirectory(s:path)
-        let s:pathsep = has("win32") ? ';' : ':'
+        let s:pathsep = s:is_win ? ';' : ':'
         let $PATH .= s:pathsep . s:path
     endif
     let g:racer_cmd = 'racer'
