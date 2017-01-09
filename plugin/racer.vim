@@ -22,7 +22,7 @@ let s:is_win = has('win32') || has('win64')
 
 if !exists('g:racer_cmd')
     let s:sep = s:is_win ? '\' : '/'
-    le s:path = join([
+    let s:path = join([
             \ escape(expand('<sfile>:p:h'), '\'),
             \ '..',
             \ 'target',
