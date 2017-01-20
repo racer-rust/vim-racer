@@ -1,20 +1,3 @@
-" Vim plugin for Racer
-" (by Phil Dawes)
-"
-" 1. Edit the variables below (or override in .vimrc)
-" 2. copy this file into .vim/plugin/
-" 3. - now in insert mode do 'C-x C-o' to autocomplete the thing at the cursor
-"    - in normal mode do 'gd' to go to definition
-"    - 'gD' goes to the definition in a new vertical split
-"
-" (This plugin is best used with the 'hidden' option enabled so that switching buffers doesn't force you to save)
-
-if exists('g:loaded_racer')
-    finish
-endif
-
-let g:loaded_racer = 1
-
 let s:save_cpo = &cpo
 set cpo&vim
 
@@ -55,10 +38,7 @@ nnoremap <silent><buffer> <Plug>(rust-def-vertical)
 nnoremap <silent><buffer> <Plug>(rust-doc)
         \ :call racer#ShowDocumentation()<CR>
 
-augroup vim-racer
-    autocmd!
-    autocmd FileType rust setlocal omnifunc=racer#RacerComplete
-augroup END
+setlocal omnifunc=racer#RacerComplete
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
