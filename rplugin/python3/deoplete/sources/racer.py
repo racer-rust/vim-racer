@@ -48,12 +48,9 @@ class Source(Base):
         if not self.__executable_racer:
             return -1
 
-        results = self.get_results(context, 'prefix',
-                                   self.vim.funcs.col('.'))
-        if not results:
-            return -1
-        prefixline = results[0]
-        return int(prefixline[7:].split(',')[0])
+        m = re.search('\w*$', context['input'])
+        return m.start() if m else -1
+
 
     def gather_candidates(self, context):
         typeMap = {
