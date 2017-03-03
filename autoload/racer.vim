@@ -129,6 +129,7 @@ function! racer#ShowDocumentation()
             split '__doc__'
         endif
 
+        setlocal nobuflisted
         setlocal modifiable
         setlocal noswapfile
         setlocal buftype=nofile
