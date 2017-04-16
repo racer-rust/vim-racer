@@ -6,7 +6,7 @@ This plugin allows vim to use [Racer](http://github.com/phildawes/racer) for Rus
 
 1. Build / Install [Racer](http://github.com/phildawes/racer)
 
-2. Install using Pathogen, Vundle or NeoBundle. Or, copy `plugin/racer.vim` into your `~/.vim/plugin` directory.
+2. Install using Pathogen, Vundle or NeoBundle. Or, copy `ftplugin/rust_racer.vim` into your `~/.vim/plugin` directory.
 
   Vundle users:
   ```
