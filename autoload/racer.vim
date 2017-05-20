@@ -262,4 +262,8 @@ function! s:ErrorCheck()
         call s:Warn('No racer executable found in $PATH (' . $PATH . ')')
         return 1
     endif
+    if !exists('$RUST_SRC_PATH')
+        call s:Warn('No $RUST_SRC_PATH variable found.')
+        return 1
+    endif
 endfunction
