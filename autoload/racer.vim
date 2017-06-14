@@ -1,9 +1,31 @@
+let s:is_win = has('win32') || has('win64')
+
+function! racer#GetRacerCmd() abort
+  if !exists('g:racer_cmd')
+    let sep = s:is_win ? '\' : '/'
+    let path = join([
+          \ escape(expand('<sfile>:p:h'), '\'),
+          \ '..',
+          \ 'target',
+          \ 'release',
+          \ ], sep)
+    if isdirectory(path)
+      let pathsep = s:is_win ? ';' : ':'
+      let $PATH .= pathsep . path
+    endif
+    let g:racer_cmd = 'racer'
+  endif
+
+  return expand(g:racer_cmd)
+endfunction
+
 function! s:RacerGetPrefixCol(base)
     let col = col('.') - 1
     let b:racer_col = col
     let b:tmpfname = tempname()
     call writefile(s:RacerGetBufferContents(a:base), b:tmpfname)
-    let cmd = g:racer_cmd . ' prefix ' . line('.') . ' ' . col . ' ' . b:tmpfname
+    let cmd = racer#GetRacerCmd() . ' prefix ' .
+        \ line('.') . ' ' . col . ' ' . b:tmpfname
     let res = system(cmd)
     let prefixline = split(res, '\n')[0]
     let startbyte = split(prefixline[7:], ',')[0]
@@ -15,7 +37,8 @@ function! s:RacerGetExpCompletions(base)
     let b:tmpfname = tempname()
     call writefile(s:RacerGetBufferContents(a:base), b:tmpfname)
     let fname = expand('%:p')
-    let cmd = g:racer_cmd . ' complete ' . line('.') . ' ' . col . ' "' . fname . '" "' . b:tmpfname . '"'
+    let cmd = racer#GetRacerCmd() . ' complete ' .
+        \ line('.') . ' ' . col . ' "' . fname . '" "' . b:tmpfname . '"'
     let res = system(cmd)
 
     let typeMap = {
@@ -98,7 +121,8 @@ function! racer#ShowDocumentation()
     " Create temporary file with the buffer's current state
     call writefile(getline(1, '$'), b:tmpfname)
     let fname = expand('%:p')
-    let cmd = g:racer_cmd . ' complete-with-snippet ' . line('.') . ' ' . col . ' ' . fname . ' ' . b:tmpfname
+    let cmd = racer#GetRacerCmd() . ' complete-with-snippet ' .
+        \ line('.') . ' ' . col . ' ' . fname . ' ' . b:tmpfname
     let res = system(cmd)
     " Restore de cursor position
     call winrestview(winview)
@@ -150,11 +174,13 @@ function! s:RacerGetCompletions(base)
     if getline('.')[:col-1] =~# '".*"\.$'
         call writefile(['fn main() {', '    let x: &str = "";', '    x.', '}'], b:tmpfname)
         let fname = expand('%:p')
-        let cmd = g:racer_cmd . ' complete 3 6 "' . fname . '" "' . b:tmpfname . '"'
+        let cmd = racer#GetRacerCmd() . ' complete 3 6 "' .
+            \ fname . '" "' . b:tmpfname . '"'
     else
         call writefile(s:RacerGetBufferContents(a:base), b:tmpfname)
         let fname = expand('%:p')
-        let cmd = g:racer_cmd . ' complete ' . line('.') . ' ' . col . ' "' . fname . '" "' . b:tmpfname . '"'
+        let cmd = racer#GetRacerCmd() . ' complete ' .
+            \ line('.') . ' ' . col . ' "' . fname . '" "' . b:tmpfname . '"'
     endif
     let res = system(cmd)
     let lines = split(res, '\n')
@@ -183,7 +209,8 @@ function! racer#GoToDefinition()
     let fname = expand('%:p')
     let tmpfname = tempname()
     call writefile(getline(1, '$'), tmpfname)
-    let cmd = g:racer_cmd . ' find-definition ' . line('.') . ' ' . col . ' ' . fname . ' ' . tmpfname
+    let cmd = racer#GetRacerCmd() . ' find-definition ' .
+        \ line('.') . ' ' . col . ' ' . fname . ' ' . tmpfname
     let res = system(cmd)
     let lines = split(res, '\n')
     for line in lines
