@@ -82,6 +82,11 @@ function! s:RacerSplitLine(line)
         \   ),
         \   '\\n', '\n', 'g'
         \ )
+
+    " Add empty lines to before/after code snippets and before section titles
+    let docs =  substitute(docs, '\n```\zs\n', '\n\n', 'g')
+    let docs =  substitute(docs, '\n\ze\%(```rust\|#\+ .\+\)\n', '\n\n', 'g')
+
     let parts = add(parts[:6], docs)
     let parts = map(copy(parts), 'substitute(v:val, ''{PLACEHOLDER}'', '';'', ''g'')')
 
