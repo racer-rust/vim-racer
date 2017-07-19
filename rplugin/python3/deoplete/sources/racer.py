@@ -40,9 +40,8 @@ class Source(Base):
         self.rank = 500
 
     def on_init(self, context):
-        self.__executable_racer = self.vim.funcs.executable(
-            self.vim.eval('g:racer_cmd'))
-        self.__racer = self.vim.eval('g:racer_cmd')
+        self.__racer = self.vim.call('racer#GetRacerCmd')
+        self.__executable_racer = self.vim.funcs.executable(self.__racer)
 
     def get_complete_position(self, context):
         if not self.__executable_racer:
