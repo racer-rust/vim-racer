@@ -40,23 +40,19 @@ function! s:RacerGetExpCompletions(base)
 
         if kind ==# 'f'
             " function
-            let completion['menu'] = substitute(
-                \   substitute(
-                \     substitute(info, '\(pub\|fn\) ', '', 'g'),
-                \     '{*$', '', ''
-                \   ),
-                \   ' where\s\?.*$', '', ''
-                \ )
+            let menu = substitute(info, '\(pub\|fn\) ', '', 'g')
+            let menu = substitute(menu, '{*$', '', '')
+            let menu = substitute(menu, ' where\s\?.*$', '', '')
+            let completion['menu'] = menu
             if g:racer_insert_paren == 1
                 let completion['abbr'] = completions[0]
                 let completion['word'] .= '('
             endif
             let completion['info'] = info
         elseif kind ==# 's' " struct
-            let completion['menu'] = substitute(
-                \   substitute(info, '\(pub\|struct\) ', '', 'g'),
-                \   '{*$', '', ''
-                \ )
+            let menu = substitute(info, '\(pub\|struct\) ', '', 'g')
+            let menu = substitute(menu, '{*$', '', '')
+            let completion['menu'] = menu
         endif
 
         if stridx(tolower(completions[0]), tolower(a:base)) == 0
@@ -72,16 +68,16 @@ function! s:RacerSplitLine(line)
     let placeholder = '{PLACEHOLDER}'
     let line = substitute(a:line, '\\;', placeholder, 'g')
     let parts = split(line, separator)
-    let docs = substitute(
-        \   substitute(
-        \     substitute(
-        \       substitute(get(parts, 7, ''), '^\"\(.*\)\"$', '\1', ''),
-        \       '\\\"', '\"', 'g'
-        \     ),
-        \     '\\''', '''', 'g'
-        \   ),
-        \   '\\n', '\n', 'g'
-        \ )
+
+    let docs = substitute(get(parts, 7, ''), '^\"\(.*\)\"$', '\1', '')
+    let docs = substitute(docs, '\\\"', '\"', 'g')
+    let docs = substitute(docs, '\\''', '''', 'g')
+    let docs = substitute(docs, '\\n', '\n', 'g')
+
+    " Add empty lines to before/after code snippets and before section titles
+    let docs =  substitute(docs, '\n```\zs\n', '\n\n', 'g')
+    let docs =  substitute(docs, '\n\ze\%(```rust\|#\+ .\+\)\n', '\n\n', 'g')
+
     let parts = add(parts[:6], docs)
     let parts = map(copy(parts), 'substitute(v:val, ''{PLACEHOLDER}'', '';'', ''g'')')
 
