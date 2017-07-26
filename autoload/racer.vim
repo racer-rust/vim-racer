@@ -216,6 +216,11 @@ function! racer#GoToDefinition()
             let linenum = split(line[6:], ',')[1]
             let colnum = split(line[6:], ',')[2]
             let fname = split(line[6:], ',')[3]
+            " if on cygwin or mingw, use cygpath to fix the filepath
+            if executable("cygpath")
+                let fname = system("cygpath " . shellescape(fname))[:-1]
+                let fname = fname[:strlen(fname)-2]
+            endif
             call s:RacerJumpToLocation(fname, linenum, colnum)
             break
         endif
