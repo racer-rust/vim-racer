@@ -244,7 +244,7 @@ function! s:RacerJumpToLocation(filename, linenum, colnum)
 
     " Record jump mark
     normal! m`
-    if a:filename != bufname('%')
+    if a:filename != expand('%:p')
         try
             exec 'keepjumps e ' . fnameescape(a:filename)
         catch /^Vim\%((\a\+)\)\=:E37/
