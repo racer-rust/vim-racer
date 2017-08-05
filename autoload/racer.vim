@@ -286,7 +286,21 @@ function! s:ErrorCheck()
         return 1
     endif
     if !exists('$RUST_SRC_PATH')
-        call s:Warn('No $RUST_SRC_PATH variable found.')
+        if executable('rustc')
+            let sep = s:is_win ? '\' : '/'
+            let path = join([
+                \ substitute(system('rustc --print sysroot'), '\n$', '', ''),
+                \ 'lib',
+                \ 'rustlib',
+                \ 'src',
+                \ 'rust',
+                \ 'src',
+                \ ], sep)
+            if isdirectory(path)
+                return 0
+            endif
+        endif
+        call s:Warn('Could not locate Rust source. Try setting $RUST_SRC_PATH.')
         return 1
     endif
 endfunction
