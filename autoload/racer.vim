@@ -281,7 +281,7 @@ function! s:Warn(msg)
 endfunction
 
 function! s:ErrorCheck()
-    if !executable(g:racer_cmd)
+    if !executable(racer#GetRacerCmd())
         call s:Warn('No racer executable found in $PATH (' . $PATH . ')')
         return 1
     endif
