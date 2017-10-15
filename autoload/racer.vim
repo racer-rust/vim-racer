@@ -111,7 +111,7 @@ function! racer#ShowDocumentation()
     let winview = winsaveview()  " Save the current cursor position
     " Move to the end of the word for the entire token to search.
     " Move one char back to avoid moving to the end of the *next* word.
-    execute 'normal he'
+    execute 'normal! he'
     let col = col('.')
     let b:tmpfname = tempname()
     " Create temporary file with the buffer's current state
