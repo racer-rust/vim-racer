@@ -137,16 +137,13 @@ function! racer#ShowDocumentation()
 
         " Only open doc buffer if there're docs to show
         let bn = bufnr('__doc__')
-        if bn > 0
-            let wi = index(tabpagebuflist(tabpagenr()), bn)
-            if wi >= 0
-                " If the __doc__ buffer is open in the current tab, jump to it
-                silent execute (wi+1) . 'wincmd w'
-            else
-                silent execute 'sbuffer ' . bn
-            endif
+        let wi = index(tabpagebuflist(tabpagenr()), bn)
+        if wi > 0
+            " If the __doc__ buffer is open in the current tab, jump to it
+            silent execute (wi+1) . 'wincmd w'
         else
-            split '__doc__'
+            pedit __doc__
+            wincmd P
         endif
 
         setlocal nobuflisted
