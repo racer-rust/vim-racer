@@ -29,6 +29,7 @@ function! s:RacerGetPrefixCol(base)
     let res = system(cmd)
     let prefixline = split(res, '\n')[0]
     let startbyte = split(prefixline[7:], ',')[0]
+    call delete(b:tmpfname)
     return startbyte - line2byte(byte2line(startbyte)) + 1
 endfunction
 
