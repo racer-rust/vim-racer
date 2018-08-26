@@ -28,11 +28,12 @@ This plugin allows vim to use [Racer](http://github.com/phildawes/racer) for Rus
   git clone --depth=1 https://github.com/racer-rust/vim-racer.git ~/.vim/bundle/vim-racer
   ```
 
-3. Add `g:racer_cmd` to your `.vimrc`. Also it's worth turning on 'hidden' mode for buffers otherwise you need to save the current buffer every time you do a goto-definition. E.g.:
+3. Add `g:racer_cmd` to your `.vimrc`. It contains full path to `racer` executable file.
+Variable `g:racer_cmd` is optional. You do not need to use this variable if the executable file is in a directory that is specified in `$PATH`, else you should specified full path to `racer` executable binary file in this `g:racer_cmd`. Also it's worth turning on 'hidden' mode for buffers otherwise you need to save the current buffer every time you do a goto-definition. E.g.:
 
   ```
   set hidden
-  let g:racer_cmd = "/path/to/racer/bin"
+  let g:racer_cmd = "/home/user/.cargo/bin/racer"
   ```
 
 4. If you want completions to show the complete function definition (e.g. its arguments and return type), enable the experimental completer:
