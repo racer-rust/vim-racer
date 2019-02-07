@@ -214,7 +214,25 @@ function! racer#GoToDefinition()
             let linenum = split(line[6:], ',')[1]
             let colnum = split(line[6:], ',')[2]
             let fname = split(line[6:], ',')[3]
+            let dotag = &tagstack && exists('*gettagstack') && exists('*settagstack')
+            if dotag
+                let from = [bufnr('%'), line('.'), col('.'), 0]
+                let tagname = expand('<cword>')
+                let stack = gettagstack()
+                if stack.curidx > 1
+                    let stack.items = stack.items[0:stack.curidx-2]
+                else
+                    let stack.items = []
+                endif
+                let stack.items += [{'from': from, 'tagname': tagname}]
+                let stack.curidx = len(stack.items)
+                call settagstack(win_getid(), stack)
+            endif
             call s:RacerJumpToLocation(fname, linenum, colnum)
+            if dotag
+                let curidx = gettagstack().curidx + 1
+                call settagstack(win_getid(), {'curidx': curidx})
+            endif
             break
         endif
     endfor
