@@ -3,7 +3,7 @@ if !exists('g:racer_experimental_completer')
 endif
 
 if !exists('g:racer_insert_paren')
-    let g:racer_insert_paren = 1
+    let g:racer_insert_paren = 0
 endif
 
 nnoremap <silent><buffer> <Plug>(rust-def)
