@@ -42,6 +42,12 @@ Variable `g:racer_cmd` is optional. You do not need to use this variable if the 
   let g:racer_experimental_completer = 1
   ```
 
+5. If you want to insert the parenthesis in the completion:
+
+  ```
+  let g:racer_insert_paren = 1
+  ```
+
 ## Example Mappings
 
 vim-racer enables `C-x-C-o` to search for completions and provides several
