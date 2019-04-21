@@ -68,7 +68,7 @@ class Source(Base):
                      if l.startswith('MATCH')]:
             completions = line.split(',')
             kind = typeMap.get(completions[4], '')
-            completion = { 'kind': kind, 'word': completions[0], 'dup': 1 }
+            completion = { 'kind': kind, 'word': completions[0] }
             if kind == 'f': # function
                 completion['menu'] = ','.join(completions[5:]).replace(
                     'pub ', '').replace('fn ', '').rstrip('{')
