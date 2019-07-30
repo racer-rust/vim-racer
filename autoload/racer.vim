@@ -1,4 +1,4 @@
-let s:is_win = has('win32') || has('win64')
+let s:is_win = has('win32')
 
 function! racer#GetRacerCmd() abort
   if !exists('g:racer_cmd')
