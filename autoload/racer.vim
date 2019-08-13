@@ -68,7 +68,7 @@ function! s:RacerGetExpCompletions(base)
             let menu = substitute(menu, '{*$', '', '')
             let menu = substitute(menu, ' where\s\?.*$', '', '')
             let completion['menu'] = menu
-            if g:racer_insert_paren == 1
+            if g:racer_insert_paren
                 let completion['abbr'] = completions[0]
                 let completion['word'] .= '('
             endif
@@ -208,7 +208,7 @@ function! racer#GoToDefinition()
     let res = system(cmd)
     let lines = split(res, '\n')
     for line in lines
-        if res =~# ' error: ' && line !=# 'END'
+        if res =~# ' error: ' && line !=# 'END' && !g:racer_disable_errors
             call s:Warn(line)
         elseif line =~# '^MATCH'
             let linenum = split(line[6:], ',')[1]

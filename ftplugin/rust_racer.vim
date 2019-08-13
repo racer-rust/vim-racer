@@ -6,6 +6,10 @@ if !exists('g:racer_insert_paren')
     let g:racer_insert_paren = 0
 endif
 
+if !exists('g:racer_disable_errors')
+    let g:racer_disable_errors = 0
+endif
+
 nnoremap <silent><buffer> <Plug>(rust-def)
         \ :call racer#GoToDefinition()<CR>
 nnoremap <silent><buffer> <Plug>(rust-def-split)

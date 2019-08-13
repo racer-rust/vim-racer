@@ -48,6 +48,12 @@ Variable `g:racer_cmd` is optional. You do not need to use this variable if the 
   let g:racer_insert_paren = 1
   ```
 
+6. If you want to disable racer's error messages:
+
+  ```
+  let g:racer_disable_errors = 1
+  ```
+
 ## Example Mappings
 
 vim-racer enables `C-x-C-o` to search for completions and provides several
