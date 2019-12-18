@@ -12,6 +12,8 @@ nnoremap <silent><buffer> <Plug>(rust-def-split)
         \ :split<CR>:call racer#GoToDefinition()<CR>
 nnoremap <silent><buffer> <Plug>(rust-def-vertical)
         \ :vsplit<CR>:call racer#GoToDefinition()<CR>
+nnoremap <silent><buffer> <Plug>(rust-def-tab)
+        \ :tab split<CR>:call racer#GoToDefinition()<CR>
 nnoremap <silent><buffer> <Plug>(rust-doc)
         \ :call racer#ShowDocumentation()<CR>
 
