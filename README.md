@@ -60,9 +60,12 @@ the cursor and open it on the current buffer, on an horizontal or vertical split
 or go straight to the documentation:
 
 ```
-au FileType rust nmap gd <Plug>(rust-def)
-au FileType rust nmap gs <Plug>(rust-def-split)
-au FileType rust nmap gx <Plug>(rust-def-vertical)
-au FileType rust nmap gt <Plug>(rust-def-tab)
-au FileType rust nmap <leader>gd <Plug>(rust-doc)
+augroup Racer
+    autocmd!
+    autocmd FileType rust nmap <buffer> gd         <Plug>(rust-def)
+    autocmd FileType rust nmap <buffer> gs         <Plug>(rust-def-split)
+    autocmd FileType rust nmap <buffer> gx         <Plug>(rust-def-vertical)
+    autocmd FileType rust nmap <buffer> gt         <Plug>(rust-def-tab)
+    autocmd FileType rust nmap <buffer> <leader>gd <Plug>(rust-doc)
+augroup END
 ```
