@@ -17,12 +17,12 @@ This plugin allows vim to use [Racer](http://github.com/phildawes/racer) for Rus
   ```
   NeoBundle 'racer-rust/vim-racer'
   ```
-  
+
   vim-plug users:
   ```
   Plug 'racer-rust/vim-racer'
   ```
-  
+
   Pathogen users:
   ```
   git clone --depth=1 https://github.com/racer-rust/vim-racer.git ~/.vim/bundle/vim-racer
