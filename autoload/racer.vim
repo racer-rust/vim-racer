@@ -1,22 +1,22 @@
 let s:is_win = has('win32')
 
 function! racer#GetRacerCmd() abort
-  if !exists('g:racer_cmd')
-    let sep = s:is_win ? '\' : '/'
-    let path = join([
-          \ escape(expand('<sfile>:p:h'), '\'),
-          \ '..',
-          \ 'target',
-          \ 'release',
-          \ ], sep)
-    if isdirectory(path)
-      let pathsep = s:is_win ? ';' : ':'
-      let $PATH .= pathsep . path
+    if !exists('g:racer_cmd')
+        let sep = s:is_win ? '\' : '/'
+        let path = join([
+              \ escape(expand('<sfile>:p:h'), '\'),
+              \ '..',
+              \ 'target',
+              \ 'release',
+              \ ], sep)
+        if isdirectory(path)
+            let pathsep = s:is_win ? ';' : ':'
+            let $PATH .= pathsep . path
+        endif
+        let g:racer_cmd = 'racer'
     endif
-    let g:racer_cmd = 'racer'
-  endif
 
-  return expand(g:racer_cmd)
+    return expand(g:racer_cmd)
 endfunction
 
 function! s:RacerGetPrefixCol(base)
