@@ -86,7 +86,7 @@ class Source(Base):
         return candidates
 
     def get_results(self, context, command, col):
-        with tempfile.NamedTemporaryFile(mode='w') as tf:
+        with tempfile.NamedTemporaryFile(mode='w', encoding='utf-8') as tf:
             tf.write("\n".join(self.vim.current.buffer))
             tf.flush()
 
