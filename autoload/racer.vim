@@ -108,7 +108,7 @@ function! s:RacerSplitLine(line)
     return parts
 endfunction
 
-function! racer#ShowDocumentation()
+function! racer#ShowDocumentation(tab)
     let winview = winsaveview()  " Save the current cursor position
     " Move to the end of the word for the entire token to search.
     " Move one char back to avoid moving to the end of the *next* word.
@@ -143,7 +143,11 @@ function! racer#ShowDocumentation()
             " If the __doc__ buffer is open in the current tab, jump to it
             silent execute (wi+1) . 'wincmd w'
         else
-            pedit __doc__
+            if a:tab
+                tab pedit __doc__
+            else
+                pedit __doc__
+            endif
             wincmd P
         endif
 

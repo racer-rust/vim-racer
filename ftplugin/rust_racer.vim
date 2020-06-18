@@ -15,6 +15,8 @@ nnoremap <silent><buffer> <Plug>(rust-def-vertical)
 nnoremap <silent><buffer> <Plug>(rust-def-tab)
         \ :tab split<CR>:call racer#GoToDefinition()<CR>
 nnoremap <silent><buffer> <Plug>(rust-doc)
-        \ :call racer#ShowDocumentation()<CR>
+        \ :call racer#ShowDocumentation(0)<CR>
+nnoremap <silent><buffer> <Plug>(rust-doc-tab)
+        \ :call racer#ShowDocumentation(1)<CR>
 
 setlocal omnifunc=racer#RacerComplete
