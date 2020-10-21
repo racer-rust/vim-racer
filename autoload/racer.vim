@@ -314,7 +314,7 @@ function! s:ErrorCheck()
                 \ 'rustlib',
                 \ 'src',
                 \ 'rust',
-                \ 'src',
+                \ 'library',
                 \ ], sep)
             if isdirectory(path)
                 return 0
