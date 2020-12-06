@@ -23,13 +23,22 @@ INSTALL							*racer-install*
 ==============================================================================
 USAGE							*racer-usage*
 
-							*racer-completion*
+COMPLETION						*racer-completion*
+
 Vim-racer uses |compl-omni| for completion, which you can trigger with
 |i_CTRL-X_CTRL-O|.
-							*racer-mapping*
-Vim-racer provides several <Plug> mappings for source code navigation. These mappings
-are not enabled by default but you can easily use them by adding the following
-lines to your .vimrc (Or init.vim in case of Neovim).
+
+COMMANDS						*racer-commands*
+			*:RacerDef*
+:RacerDef		Goto definition of symbol under the cursor.
+
+			*:RacerDoc*
+:RacerDoc		Show documentation of the symbol under the cursor.
+
+KEYBOARD MAPPINGS					*racer-mapping*
+Vim-racer provides several <Plug> mappings for source code navigation. These
+mappings are not enabled by default but you can easily use them by adding the
+following lines to your .vimrc (Or init.vim in case of Neovim).
 >
   augroup Racer
      autocmd!
@@ -45,8 +54,8 @@ lines to your .vimrc (Or init.vim in case of Neovim).
 SETTINGS						*racer-settings*
 
 							*'g:racer_cmd'*
-Set |'g:racer_cmd'| to specify the full path to the racer executable. If not set, the racer
-executable must be in your PATH.
+Set |'g:racer_cmd'| to specify the full path to the racer executable. If not
+set, the racer executable must be in your PATH.
 >
    let g:racer_cmd = $HOME . "/.cargo/bin/racer"
 <

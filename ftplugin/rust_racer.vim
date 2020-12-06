@@ -20,3 +20,6 @@ nnoremap <silent><buffer> <Plug>(rust-doc-tab)
         \ :call racer#ShowDocumentation(1)<CR>
 
 setlocal omnifunc=racer#RacerComplete
+
+command! -nargs=0 RacerDef call racer#GoToDefinition()
+command! -nargs=0 RacerDoc call racer#ShowDocumentation(0)
