@@ -1,0 +1,66 @@
+*vim-racer* *racer*	Vim Racer Plugin
+
+==============================================================================
+CONTENTS						*racer-contents*
+
+1. Intro	|racer-contents|
+2. Install	|racer-usage|
+3. Usage	|racer-intro|
+4. Settings	|racer-settings|
+
+==============================================================================
+INTRO							*racer-intro*
+
+This plugin allows Vim to use Racer for Rust code completion and navigation.
+
+==============================================================================
+INSTALL							*racer-install*
+
+1. Install Racer. For details, see: https://github.com/racer-rust/racer.
+2. Install this plugin like a standard Vim plugin. For details, see:
+   https://github.com/racer-rust/vim-racer.
+
+==============================================================================
+USAGE							*racer-usage*
+
+							*racer-completion*
+Vim-racer uses |compl-omni| for completion, which you can trigger with
+|i_CTRL-X_CTRL-O|.
+							*racer-mapping*
+Vim-racer provides several <Plug> mappings for source code navigation. These mappings
+are not enabled by default but you can easily use them by adding the following
+lines to your .vimrc (Or init.vim in case of Neovim).
+>
+  augroup Racer
+     autocmd!
+     autocmd FileType rust nmap <buffer> gd         <Plug>(rust-def)
+     autocmd FileType rust nmap <buffer> gs         <Plug>(rust-def-split)
+     autocmd FileType rust nmap <buffer> gx         <Plug>(rust-def-vertical)
+     autocmd FileType rust nmap <buffer> gt         <Plug>(rust-def-tab)
+     autocmd FileType rust nmap <buffer> <leader>gd <Plug>(rust-doc)
+     autocmd FileType rust nmap <buffer> <leader>gD <Plug>(rust-doc-tab)
+  augroup END
+<
+==============================================================================
+SETTINGS						*racer-settings*
+
+							*'g:racer_cmd'*
+Set |'g:racer_cmd'| to specify the full path to the racer executable. If not set, the racer
+executable must be in your PATH.
+>
+   let g:racer_cmd = $HOME . "/.cargo/bin/racer"
+<
+							*'g:racer_experimental_completer'*
+Set |'g:racer_experimental_completer'| to enable the experimental completer.
+The experimental completer shows the complete function definition, including
+arguments and return type.
+>
+   let g:racer_experimental_completer = 1
+<
+							*'g:racer_insert_paren'*
+Set |'g:racer_insert_paren'| to insert the parenthesis in the completion.
+>
+   let g:racer_insert_paren = 1
+<
+
+ vim:tw=78:ts=8:sw=8:noet:ft=help:norl:
