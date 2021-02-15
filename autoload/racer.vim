@@ -208,7 +208,7 @@ function! racer#GoToDefinition()
     let tmpfname = tempname()
     call writefile(getline(1, '$'), tmpfname)
     let cmd = racer#GetRacerCmd() . ' find-definition ' .
-        \ line('.') . ' ' . col . ' "' . fname . '" "' . b:tmpfname . '"'
+        \ line('.') . ' ' . col . ' "' . fname . '" "' . tmpfname . '"'
     let res = system(cmd)
     let lines = split(res, '\n')
     for line in lines
