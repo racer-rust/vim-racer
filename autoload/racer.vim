@@ -119,7 +119,7 @@ function! racer#ShowDocumentation(tab)
     call writefile(getline(1, '$'), b:tmpfname)
     let fname = expand('%:p')
     let cmd = racer#GetRacerCmd() . ' complete-with-snippet ' .
-        \ line('.') . ' ' . col . ' ' . fname . ' ' . b:tmpfname
+        \ line('.') . ' ' . col . ' "' . fname . '" "' . b:tmpfname . '"'
     let res = system(cmd)
     " Restore de cursor position
     call winrestview(winview)
@@ -208,7 +208,7 @@ function! racer#GoToDefinition()
     let tmpfname = tempname()
     call writefile(getline(1, '$'), tmpfname)
     let cmd = racer#GetRacerCmd() . ' find-definition ' .
-        \ line('.') . ' ' . col . ' ' . fname . ' ' . tmpfname
+        \ line('.') . ' ' . col . ' "' . fname . '" "' . b:tmpfname . '"'
     let res = system(cmd)
     let lines = split(res, '\n')
     for line in lines
